@@ -47,9 +47,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StyleEffects_EdgeDetection"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StyleEffects_Static", "StyleEffects_Static\StyleEffects_Static.csproj", "{74761AFE-1CAB-4838-8396-3815FB69FEC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StyleEffects_OldMovie", "StyleEffects_OldMovie\StyleEffects_OldMovie.csproj", "{86CDE244-53BF-478F-A184-DA5995F44823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StyleEffects_OldMovie", "StyleEffects_OldMovie\StyleEffects_OldMovie.csproj", "{86CDE244-53BF-478F-A184-DA5995F44823}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StyleEffects_CRT", "StyleEffects_CRT\StyleEffects_CRT.csproj", "{E8F1CF8A-EA51-4440-BFDF-76449C48AC2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StyleEffects_CRT", "StyleEffects_CRT\StyleEffects_CRT.csproj", "{E8F1CF8A-EA51-4440-BFDF-76449C48AC2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Surfaces_CreateTextureFromDataRGBA", "Surfaces_CreateTextureFromDataRGBA\Surfaces_CreateTextureFromDataRGBA.csproj", "{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -349,6 +351,18 @@ Global
 		{E8F1CF8A-EA51-4440-BFDF-76449C48AC2B}.Release|x64.Build.0 = Release|Any CPU
 		{E8F1CF8A-EA51-4440-BFDF-76449C48AC2B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E8F1CF8A-EA51-4440-BFDF-76449C48AC2B}.Release|x86.Build.0 = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|x64.Build.0 = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Debug|x86.Build.0 = Debug|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|x64.Build.0 = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|x86.ActiveCfg = Release|Any CPU
+		{7A7555B2-D8A3-44BB-AD00-B12037DFB89F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
