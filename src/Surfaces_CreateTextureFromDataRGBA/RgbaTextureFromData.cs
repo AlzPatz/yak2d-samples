@@ -11,10 +11,14 @@ namespace Surfaces_CreateTextureFromDataRGBA
     {
         private const int WIDTH = 960;
         private const int HEIGHT = 540;
+        private const double MOVE_PIXELS = 25.0;
 
         private bool _calculating;
         private ITexture _texture;
         private ITexture _textureOneBeforeADestructionCache;
+
+        private double _zoom = 200.0f;
+        private Vector2 _target = Vector2.Zero;
 
         public override string ReturnWindowTitle() => "Generating Textures from RGBA pixel data";
 
@@ -34,7 +38,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
             return true;
         }
 
-        private async void TriggerFractalCalculation(IServices services)
+        private async void TriggerFractalCalculation(IServices services, Vector2 target, double zoom)
         {
             _calculating = true;
 
@@ -43,7 +47,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
                 //var rnd = new Random();
                 //var colour = new Vector4((float)rnd.NextDouble(), (float)rnd.NextDouble(), (float)rnd.NextDouble(), 1.0f);
                 //return Enumerable.Repeat(colour, 960 * 540).ToArray();
-                var pixels = GenerateMandelbrot();
+                var pixels = GenerateMandelbrot(target, zoom);
                 return pixels;
             });
 
@@ -76,7 +80,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
          */
 
 
-        private Vector4[] GenerateMandelbrot()
+        private Vector4[] GenerateMandelbrot(Vector2 target, double zoom)
         {
             //Calculating the Mandelbrot set on the CPU for use in an example of a GPU focused library is all kinds of sad
             //I'll rectify this in the Custom Veldrid Example
@@ -87,9 +91,22 @@ namespace Surfaces_CreateTextureFromDataRGBA
 
             var pixels = new Vector4[WIDTH * HEIGHT];
 
-            double min = -2.84;// -2.0;
-            double max = 1.0;//  2.0;
-            double factor = 1.0;
+            if(zoom <= 0.0)
+            {
+                zoom = 0.000000001;
+            }
+
+            var ooz = 1.0 / zoom;
+
+            var min_x = target.X - (0.5 * WIDTH * ooz);
+            var max_x = target.X + (0.5 * WIDTH * ooz);
+
+            var min_y = target.Y - (0.5 * HEIGHT * ooz);
+            var max_y = target.Y + (0.5 * HEIGHT * ooz);
+
+            //double min = -2.84;// -2.0;
+            //double max = 1.0;//  2.0;
+            //double factor = 1.0;
 
             int maxIterations = 200;
 
@@ -97,8 +114,8 @@ namespace Surfaces_CreateTextureFromDataRGBA
             {
                 for (var x = 0; x < WIDTH; x++)
                 {
-                    var a = Map(x, 0, WIDTH, min, max);
-                    var b = Map(y, 0, HEIGHT, min, max);
+                    var a = Map(x, 0, WIDTH, min_x, max_x);
+                    var b = Map(y, 0, HEIGHT, min_y, max_y);
 
                     var ai = a;
                     var bi = b;
@@ -165,6 +182,40 @@ namespace Surfaces_CreateTextureFromDataRGBA
 
         public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
         {
+            var input = services.Input;
+
+            var ooz = 1.0 / _zoom;
+
+            if(input.WasKeyReleasedThisFrame(KeyCode.Left))
+            {
+                _target.X -= (float)(ooz * MOVE_PIXELS);
+            }
+
+                        if(input.WasKeyReleasedThisFrame(KeyCode.Right))
+            {
+                _target.X += (float)(ooz * MOVE_PIXELS);
+            }
+
+                        if(input.WasKeyReleasedThisFrame(KeyCode.Up))
+            {
+                _target.Y -= (float)(ooz * MOVE_PIXELS);
+            }
+
+                        if(input.WasKeyReleasedThisFrame(KeyCode.Down))
+            {
+                _target.Y += (float)(ooz * MOVE_PIXELS);
+            }
+
+            if(input.WasKeyReleasedThisFrame(KeyCode.A))
+            {
+                _zoom *= 1.2;
+            }
+
+            if(input.WasKeyReleasedThisFrame(KeyCode.Z))
+            {
+                _zoom *= 0.83;
+            }
+
             return true;
         }
 
@@ -172,7 +223,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
         {
             if (!_calculating)
             {
-                TriggerFractalCalculation(services);
+                TriggerFractalCalculation(services, _target, _zoom);
             }
         }
 

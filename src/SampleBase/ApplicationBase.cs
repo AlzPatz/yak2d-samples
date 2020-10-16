@@ -14,7 +14,7 @@ namespace SampleBase
         {
             return new StartupConfig
             {
-                PreferredGraphicsApi = GraphicsApi.OpenGL,
+                PreferredGraphicsApi = GraphicsApi.SystemDefault,
                 WindowState = DisplayState.Normal,
                 WindowPositionX = 100,
                 WindowPositionY = 100,
