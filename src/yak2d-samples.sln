@@ -69,7 +69,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mesh_ManualMeshSimple", "Me
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Draw_Camera2DWorldAndScreen", "Draw_Camera2DWorldAndScreen\Draw_Camera2DWorldAndScreen.csproj", "{1D2409DD-970C-4393-BC02-A1890EC9A028}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Draw_SplitScreenExample", "Draw_SplitScreenExample\Draw_SplitScreenExample.csproj", "{8B49E453-0636-4052-88FD-705D3AB68DD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Draw_SplitScreenExample", "Draw_SplitScreenExample\Draw_SplitScreenExample.csproj", "{8B49E453-0636-4052-88FD-705D3AB68DD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomShader_Example", "CustomShader_Example\CustomShader_Example.csproj", "{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomVeldrid_ComputeShaderExample", "CustomVeldrid_ComputeShaderExample\CustomVeldrid_ComputeShaderExample.csproj", "{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -489,6 +493,30 @@ Global
 		{8B49E453-0636-4052-88FD-705D3AB68DD2}.Release|x64.Build.0 = Release|Any CPU
 		{8B49E453-0636-4052-88FD-705D3AB68DD2}.Release|x86.ActiveCfg = Release|Any CPU
 		{8B49E453-0636-4052-88FD-705D3AB68DD2}.Release|x86.Build.0 = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|x64.Build.0 = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Debug|x86.Build.0 = Debug|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|x64.ActiveCfg = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|x64.Build.0 = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|x86.ActiveCfg = Release|Any CPU
+		{595BAB7B-4F8F-45B9-AEDE-6BA0E2738050}.Release|x86.Build.0 = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|x64.Build.0 = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|x64.Build.0 = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{BAC3236B-22BC-4AEF-B6AC-CF9C66ED0FFB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

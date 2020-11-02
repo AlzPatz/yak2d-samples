@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 using Yak2D;
 using SampleBase;
-using System;
 using System.Collections.Generic;
 
 namespace Mesh_ManualMeshSimple
