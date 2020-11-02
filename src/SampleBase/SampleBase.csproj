@@ -1,17 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
- <!--
   <ItemGroup>
     <PackageReference Include="Yak2D" Version="0.0.5" />
   </ItemGroup>
- -->
 
+  <!--
   <ItemGroup>
     <ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj" />
   </ItemGroup>
+  -->
 
 </Project>
