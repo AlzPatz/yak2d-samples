@@ -6,7 +6,7 @@ namespace Draw_SplitScreenExample
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Yak2D.Launcher.Run(new SplitScreenExample());
         }
     }
 }
