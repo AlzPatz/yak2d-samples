@@ -18,6 +18,7 @@ namespace Draw_SplitScreenExample
         private readonly float TANK_MAX_SPEED;
         private readonly float TANK_MAX_TURN_SPEED;
         private readonly float TANK_MAX_TURN_RATE;
+        private readonly float TANK_MIN_TURN_SCALAR;
         private readonly float TANK_ACCELERATION;
         private readonly float TANK_DECELERATION;
         private readonly float TANK_ROLLING_DECELERATION;
@@ -31,6 +32,7 @@ namespace Draw_SplitScreenExample
                        float TANK_MAX_SPEED,
                        float TANK_MAX_TURN_SPEED,
                        float TANK_MAX_TURN_RATE,
+                       float TANK_MIN_TURN_SCALAR,
                        float TANK_ACCELERATION,
                        float TANK_DECELERATION,
                        float TANK_ROLLING_DECELERATION)
@@ -47,6 +49,7 @@ namespace Draw_SplitScreenExample
             this.TANK_MAX_SPEED = TANK_MAX_SPEED;
             this.TANK_MAX_TURN_SPEED = TANK_MAX_TURN_SPEED;
             this.TANK_MAX_TURN_RATE = TANK_MAX_TURN_RATE;
+            this.TANK_MIN_TURN_SCALAR = TANK_MIN_TURN_SCALAR;
             this.TANK_ACCELERATION = TANK_ACCELERATION;
             this.TANK_DECELERATION = TANK_DECELERATION;
             this.TANK_ROLLING_DECELERATION = TANK_ROLLING_DECELERATION;
@@ -134,7 +137,7 @@ namespace Draw_SplitScreenExample
             }
             else
             {
-                turnScale = 1.0f - ((speed - TANK_MAX_TURN_SPEED) / TANK_MAX_TURN_SPEED);
+                turnScale = 1.0f - ((1.0f - TANK_MIN_TURN_SCALAR) * ((speed - TANK_MAX_TURN_SPEED) / (TANK_MAX_SPEED - TANK_MAX_TURN_SPEED)));
             }
 
             Angle += turnScale * turn * TANK_MAX_TURN_RATE * timeSinceLastUpdateSeconds;
@@ -152,7 +155,7 @@ namespace Draw_SplitScreenExample
 
             //Update Position
 
-            var direction = Vector2.Transform(Vector2.UnitY, Matrix3x2.CreateRotation(Angle));
+            var direction = Vector2.Transform(Vector2.UnitY, Matrix3x2.CreateRotation(-Angle));
 
             Position += direction * Speed * timeSinceLastUpdateSeconds;
         }

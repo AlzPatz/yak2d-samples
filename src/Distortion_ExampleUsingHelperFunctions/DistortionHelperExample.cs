@@ -31,29 +31,29 @@ namespace Distortion_ExampleUsingHelperFunctions
         }
 
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _distortionDrawStage = services.Stages.CreateDistortionStage(480, 270, true);
+            _distortionDrawStage = yak.Stages.CreateDistortionStage(480, 270, true);
 
-            services.Stages.SetDistortionConfig(_distortionDrawStage, new DistortionEffectConfiguration
+            yak.Stages.SetDistortionConfig(_distortionDrawStage, new DistortionEffectConfiguration
             { 
                  DistortionScalar = 30.0f
             });
 
-            _texturePool = services.Surfaces.LoadTexture("pool", AssetSourceEnum.Embedded);
+            _texturePool = yak.Surfaces.LoadTexture("pool", AssetSourceEnum.Embedded);
 
-            _textureDistortion = services.Helpers.DistortionHelper.TextureGenerator.ConcentricSinusoidalFloat32(256, 256, 8, true, true);
+            _textureDistortion = yak.Helpers.DistortionHelper.TextureGenerator.ConcentricSinusoidalFloat32(256, 256, 8, true, true);
 
-            _distortionCollection = services.Helpers.DistortionHelper.CreateNewCollection();
+            _distortionCollection = yak.Helpers.DistortionHelper.CreateNewCollection();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540);
+            _camera = yak.Cameras.CreateCamera2D(960, 540);
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
-            var input = services.Input;
+            var input = yak.Input;
 
             if (input.WasMouseReleasedThisFrame(MouseButton.Left))
             {
@@ -77,7 +77,7 @@ namespace Distortion_ExampleUsingHelperFunctions
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             if (_rnd.NextDouble() < PROBABILITY_OF_NEW_RIPPLE)
             {
@@ -108,16 +108,16 @@ namespace Distortion_ExampleUsingHelperFunctions
             _distortionCollection.Update(timeSinceLastDrawSeconds);
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw, IFps fps, IInput input,ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            _distortionCollection.Draw(drawing, _distortionDrawStage);
+            _distortionCollection.Draw(draw, _distortionDrawStage);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Distortion(_distortionDrawStage, _camera, _texturePool, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Distortion(_distortionDrawStage, _camera, _texturePool, windowRenderTarget);
         }
 
         public override void Shutdown() { }

@@ -40,27 +40,27 @@ namespace Distortion_ManualTextureCreation
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _distortionDrawStage = services.Stages.CreateDistortionStage(190, 270, true); //half dimension internal surfaces used 
+            _distortionDrawStage = yak.Stages.CreateDistortionStage(190, 270, true); //half dimension internal surfaces used 
 
-            services.Stages.SetDistortionConfig(_distortionDrawStage, new DistortionEffectConfiguration
+            yak.Stages.SetDistortionConfig(_distortionDrawStage, new DistortionEffectConfiguration
             {
                 DistortionScalar = 30.0f
             });
 
-            _textureHeatHaze = CreateHeatHazeTexture(services);
+            _textureHeatHaze = CreateHeatHazeTexture(yak);
 
-            _textureFire = services.Surfaces.LoadTexture("fire", AssetSourceEnum.Embedded);
+            _textureFire = yak.Surfaces.LoadTexture("fire", AssetSourceEnum.Embedded);
 
-            _camera = services.Cameras.CreateCamera2D(380, 540);
+            _camera = yak.Cameras.CreateCamera2D(380, 540);
 
-            _viewport = services.Stages.CreateViewport(290, 0, 380, 540);
+            _viewport = yak.Stages.CreateViewport(290, 0, 380, 540);
 
             return true;
         }
 
-        private ITexture CreateHeatHazeTexture(IServices services)
+        private ITexture CreateHeatHazeTexture(IServices yak)
         {
             // We need coherant noise (Perlin will do) - smooth gradients
             // Explains it http://devmag.org.za/2009/04/25/perlin-noise/
@@ -166,14 +166,19 @@ namespace Distortion_ManualTextureCreation
                 }
             }
 
-            return services.Surfaces.CreateFloat32FromData(380, 1080, pixels);
+            return yak.Surfaces.CreateFloat32FromData(380, 1080, pixels);
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing drawing,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             float fraction = duration / LOOP_DURATION;
 
@@ -240,14 +245,14 @@ namespace Distortion_ManualTextureCreation
             };
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewport);
-            queue.Distortion(_distortionDrawStage, _camera, _textureFire, WindowRenderTarget);
-            queue.RemoveViewport();
+            q.SetViewport(_viewport);
+            q.Distortion(_distortionDrawStage, _camera, _textureFire, windowRenderTarget);
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }

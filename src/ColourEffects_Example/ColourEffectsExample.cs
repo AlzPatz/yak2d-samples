@@ -28,36 +28,36 @@ namespace ColourEffects_Example
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texture = services.Surfaces.LoadTexture("yak", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("yak", AssetSourceEnum.Embedded);
 
             //We use a different effect stage for each effect as you cannot modify an effects stage property within a single draw/render frame/queue of commands
-            _effect_SingleColour = services.Stages.CreateColourEffectsStage();
-            _effect_GrayScale = services.Stages.CreateColourEffectsStage();
-            _effect_Colourise = services.Stages.CreateColourEffectsStage();
-            _effect_Negative = services.Stages.CreateColourEffectsStage();
-            _effect_Opacity = services.Stages.CreateColourEffectsStage();
-            _effect_VariableCombination = services.Stages.CreateColourEffectsStage();
+            _effect_SingleColour = yak.Stages.CreateColourEffectsStage();
+            _effect_GrayScale = yak.Stages.CreateColourEffectsStage();
+            _effect_Colourise = yak.Stages.CreateColourEffectsStage();
+            _effect_Negative = yak.Stages.CreateColourEffectsStage();
+            _effect_Opacity = yak.Stages.CreateColourEffectsStage();
+            _effect_VariableCombination = yak.Stages.CreateColourEffectsStage();
 
             //Viewports are given in absolute pixel positions and sizes with origin at top left
             //This coordinate system is different to that use in the rest of the framework
             _viewports = new IViewport[]
             {
-                services.Stages.CreateViewport(0, 0, 320, 270),
-                services.Stages.CreateViewport(320, 0, 320, 270),
-                services.Stages.CreateViewport(640, 0, 320, 270),
-                services.Stages.CreateViewport(0, 270, 320, 270),
-                services.Stages.CreateViewport(320, 270, 320, 270),
-                services.Stages.CreateViewport(640, 270, 320, 270),
+                yak.Stages.CreateViewport(0, 0, 320, 270),
+                yak.Stages.CreateViewport(320, 0, 320, 270),
+                yak.Stages.CreateViewport(640, 0, 320, 270),
+                yak.Stages.CreateViewport(0, 270, 320, 270),
+                yak.Stages.CreateViewport(320, 270, 320, 270),
+                yak.Stages.CreateViewport(640, 270, 320, 270),
             };
 
-            SetInitialEffectConfigurations(services);
+            SetInitialEffectConfigurations(yak);
 
             return true;
         }
 
-        private void SetInitialEffectConfigurations(IServices services)
+        private void SetInitialEffectConfigurations(IServices yak)
         {
             //Work off a base "non effect" configuration, copy and modify the struct for each effect config later
             var defaultConfig = new ColourEffectConfiguration
@@ -75,30 +75,30 @@ namespace ColourEffects_Example
             var singleColourConfig = defaultConfig;
             singleColourConfig.SingleColour = 0.5f;
             singleColourConfig.ColourForSingleColourAndColourise = Colour.HotPink;
-            services.Stages.SetColourEffectsConfig(_effect_SingleColour, singleColourConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_SingleColour, singleColourConfig);
 
             var colouriseConfig = defaultConfig;
             colouriseConfig.Colourise = 1.0f;
             colouriseConfig.ColourForSingleColourAndColourise = Colour.HotPink;
-            services.Stages.SetColourEffectsConfig(_effect_Colourise, colouriseConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_Colourise, colouriseConfig);
 
             var grayScaleConfig = defaultConfig;
             grayScaleConfig.GrayScale = 1.0f;
-            services.Stages.SetColourEffectsConfig(_effect_GrayScale, grayScaleConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_GrayScale, grayScaleConfig);
 
             var negativeConfig = defaultConfig;
             negativeConfig.Negative = 1.0f;
-            services.Stages.SetColourEffectsConfig(_effect_Negative, negativeConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_Negative, negativeConfig);
 
             var opacityConfig = defaultConfig;
             opacityConfig.Opacity = 0.3f;
-            services.Stages.SetColourEffectsConfig(_effect_Opacity, opacityConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_Opacity, opacityConfig);
 
             //The variable / transition effect, just set to defaults to behin with 
-            services.Stages.SetColourEffectsConfig(_effect_VariableCombination, defaultConfig);
+            yak.Stages.SetColourEffectsConfig(_effect_VariableCombination, defaultConfig);
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
             //Trigger a boolean switch for a new config every DURATION seconds
             _count += timeSinceLastUpdateSeconds;
@@ -112,7 +112,7 @@ namespace ColourEffects_Example
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             //Update the varying / transitioning effect combination stage
             if (_setARandomConfig)
@@ -133,37 +133,42 @@ namespace ColourEffects_Example
                     SingleColour = 0.5f * (float)rnd.NextDouble(),
                 };
 
-                services.Stages.SetColourEffectsConfig(_effect_VariableCombination, config, DURATION);
+                yak.Stages.SetColourEffectsConfig(_effect_VariableCombination, config, DURATION);
             }
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transform,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds) { }
 
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewports[0]);
-            queue.ColourEffects(_effect_SingleColour, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[0]);
+            q.ColourEffects(_effect_SingleColour, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewports[1]);
-            queue.ColourEffects(_effect_Colourise, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[1]);
+            q.ColourEffects(_effect_Colourise, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewports[2]);
-            queue.ColourEffects(_effect_GrayScale, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[2]);
+            q.ColourEffects(_effect_GrayScale, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewports[3]);
-            queue.ColourEffects(_effect_Negative, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[3]);
+            q.ColourEffects(_effect_Negative, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewports[4]);
-            queue.ColourEffects(_effect_Opacity, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[4]);
+            q.ColourEffects(_effect_Opacity, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewports[5]);
-            queue.ColourEffects(_effect_VariableCombination, _texture, WindowRenderTarget);
+            q.SetViewport(_viewports[5]);
+            q.ColourEffects(_effect_VariableCombination, _texture, windowRenderTarget);
 
-            queue.RemoveViewport(); //Uneeded here, as viewports will clear before a new frame starts, but included to show how to go back to rendering to entire surfaces within a queue if required
+            q.RemoveViewport(); //Uneeded here, as viewports will clear before a new frame starts, but included to show how to go back to rendering to entire surfaces within a queue if required
         }
 
         public override void Shutdown() { }

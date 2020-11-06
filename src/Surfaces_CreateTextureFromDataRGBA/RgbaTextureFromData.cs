@@ -45,10 +45,10 @@ namespace Surfaces_CreateTextureFromDataRGBA
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
-            _camera = services.Cameras.CreateCamera2D();
+            _drawStage = yak.Stages.CreateDrawStage();
+            _camera = yak.Cameras.CreateCamera2D();
 
             //Generate a clear texture if no fractal texture yet computed
             if (_texture == null)
@@ -57,7 +57,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
 
                 //This is actually the only line required to demonstrate texture creation from data
                 //=================================================================================
-                _texture = services.Surfaces.CreateRgbaFromData(WIDTH, HEIGHT, pixels);
+                _texture = yak.Surfaces.CreateRgbaFromData(WIDTH, HEIGHT, pixels);
                 //=================================================================================
             }
 
@@ -70,7 +70,7 @@ namespace Surfaces_CreateTextureFromDataRGBA
             return true;
         }
 
-        private async void TriggerFractalCalculation(IServices services, Vector2 target, double zoom, int iteration)
+        private async void TriggerFractalCalculation(IServices yak, Vector2 target, double zoom, int iteration)
         {
             _cancellationSource = new CancellationTokenSource();
             var cancellationToken = _cancellationSource.Token;
@@ -100,10 +100,10 @@ namespace Surfaces_CreateTextureFromDataRGBA
                 //use when requested to destroy it
                 if (_textureOneBeforeADestructionCache != null)
                 {
-                    services.Surfaces.DestroySurface(_textureOneBeforeADestructionCache);
+                    yak.Surfaces.DestroySurface(_textureOneBeforeADestructionCache);
                 }
                 _textureOneBeforeADestructionCache = _texture;
-                _texture = services.Surfaces.CreateRgbaFromData(WIDTH, HEIGHT, pixelData);
+                _texture = yak.Surfaces.CreateRgbaFromData(WIDTH, HEIGHT, pixelData);
             }
 
             _calculating = false;
@@ -213,9 +213,9 @@ namespace Surfaces_CreateTextureFromDataRGBA
             return out_min + (((val - in_min) / (in_max - in_min)) * (out_max - out_min));
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
-            var input = services.Input;
+            var input = yak.Input;
 
             var change = false;
             var newZoom = _zoom;
@@ -250,37 +250,42 @@ namespace Surfaces_CreateTextureFromDataRGBA
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             if (!_calculating)
             {
-                TriggerFractalCalculation(services, _target, _zoom, _iteration);
+                TriggerFractalCalculation(yak, _target, _zoom, _iteration);
             }
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             var widthInCurrentZoom = (_zoom / _zoomOfLastTexture) * WIDTH;
             var heightInCurrentZoom = (_zoom / _zoomOfLastTexture) * HEIGHT;
             var relativePos = (_targetOfLastTexture - _target) * (float)_zoom;
             relativePos.Y = -relativePos.Y;
 
-            drawing.DrawingHelpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, relativePos, (float)widthInCurrentZoom, (float)heightInCurrentZoom, 0.5f, 0);
+            draw.Helpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, relativePos, (float)widthInCurrentZoom, (float)heightInCurrentZoom, 0.5f, 0);
 
 
             var barWidth = 200.0f;
             var barHeight = 30.0f;
 
             var leftBarPos = new Vector2((0.5f * WIDTH) - 20.0f - barWidth, (0.5f * HEIGHT) - 20.0f - (0.5f * barHeight));
-            drawing.DrawingHelpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Color.DarkSlateBlue, leftBarPos + new Vector2(0.5f * barWidth, 0.0f), barWidth, barHeight, 0.9f, 0);
-            drawing.DrawingHelpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Color.Yellow, leftBarPos + new Vector2(0.5f * (_completion.Percent * barWidth), 0.0f), (_completion.Percent * barWidth), barHeight, 0.8f, 0);
+            draw.Helpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Color.DarkSlateBlue, leftBarPos + new Vector2(0.5f * barWidth, 0.0f), barWidth, barHeight, 0.9f, 0);
+            draw.Helpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Color.Yellow, leftBarPos + new Vector2(0.5f * (_completion.Percent * barWidth), 0.0f), (_completion.Percent * barWidth), barHeight, 0.8f, 0);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, windowRenderTarget);
         }
 
         public override void Shutdown() { }

@@ -14,24 +14,24 @@ namespace Copy_Example
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texture = services.Surfaces.LoadTexture("yak", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("yak", AssetSourceEnum.Embedded);
 
             return true;
         }
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transform, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.Copy(_texture, WindowRenderTarget);
+            q.Copy(_texture, windowRenderTarget);
         }
 
         public override void Shutdown() { }

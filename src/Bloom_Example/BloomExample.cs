@@ -24,22 +24,22 @@ namespace Bloom_Example
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _camera = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
-            _renderTarget = services.Surfaces.CreateRenderTarget(960, 540);
+            _renderTarget = yak.Surfaces.CreateRenderTarget(960, 540);
 
-            _texture = services.Surfaces.LoadTexture("hongkong", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("hongkong", AssetSourceEnum.Embedded);
 
-            _bloomStage = services.Stages.CreateBloomStage(240, 135); // The smaller the internal intermediate blur surface, the lower quality the but the broader and faster the effect
+            _bloomStage = yak.Stages.CreateBloomStage(240, 135); // The smaller the internal intermediate blur surface, the lower quality the but the broader and faster the effect
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
             //Generate a repeating 0 to 1 fraction loop
 
@@ -55,9 +55,9 @@ namespace Bloom_Example
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            services.Stages.SetBloomConfig(_bloomStage, new BloomEffectConfiguration
+            yak.Stages.SetBloomConfig(_bloomStage, new BloomEffectConfiguration
             {
                 AdditiveMixAmount = ((float)Math.Sin(_fraction * 2.0f * Math.PI) + 1.0f) * 0.5f,
                 BrightnessThreshold = 0.5f,
@@ -66,17 +66,22 @@ namespace Bloom_Example
             });
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transform,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
-            drawing.DrawingHelpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, Vector2.Zero, 960, 540, 0.5f);
+            draw.Helpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, Vector2.Zero, 960, 540, 0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, _renderTarget);
-            queue.Bloom(_bloomStage, _renderTarget, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, _renderTarget);
+            q.Bloom(_bloomStage, _renderTarget, windowRenderTarget);
         }
 
         public override void Shutdown() { }

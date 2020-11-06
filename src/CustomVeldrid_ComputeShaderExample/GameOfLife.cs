@@ -6,25 +6,54 @@ using Yak2D;
 using System;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace CustomVeldrid_ComputeShaderExample
 {
-    /// <summary>
-    /// An example that uses Veldrid.SPIRV to generate and run a compute shader version of Conway's Game of Life
-    /// </summary>
     public class GameOfLife : CustomVeldridBase
     {
+        private const int INIT_NUM_FRAMES_TO_WAIT_FOR_UPDATE = 16;
+
+        public int NumberFramesToWaitForUpdate { get; set; }
+        public bool Paused { get; set; }
+        public bool ClearFlag { get; set; }
+        public List<Point> PointsToAdd { get; set; }
+        public List<Point> PointsToRemove { get; set; }
+
+        private struct GridSize
+        {
+            public int Width;
+            public int Height;
+            public int Pad0;
+            public int Pad1;
+        };
+
+        private struct WriteToggle
+        {
+            public int Write;
+            public int Pad2;
+            public int Pad3;
+            public int Pad4;
+        };
+
+        private int frameCount = 0;
+
         private int _width;
         private int _height;
+
+        private Random _rnd;
+
+        private int _threadGroupSize;
 
         private Shader _computeShader;
         private ResourceLayout _computeLayout;
         private Pipeline _computePipeline;
-        private Texture _computeTargetTexture;
-        private TextureView _computeTargetTextureView;
-        private ResourceSet _computeResourceSet;
-        private DeviceBuffer _screenSizeBuffer;
-        private DeviceBuffer _shiftBuffer;
+        private TextureView[] _conwayTextureViews;
+        private ResourceSet[] _conwayResourceSets;
+        private DeviceBuffer _gridSizeBuffer;
+        private DeviceBuffer _writeToggleBuffer;
 
         private DeviceBuffer _vertexBuffer;
         private DeviceBuffer _indexBuffer;
@@ -32,22 +61,35 @@ namespace CustomVeldrid_ComputeShaderExample
         private Pipeline _graphicsPipeline;
         private ResourceSet _graphicsResourceSet;
 
-        private float _ticks;
+        private Texture _stagingTexture;
+        private Texture[] _conwayTextures;
+        private Texture _renderableTexture;
+        private TextureView _renderableTextureView;
 
-        public GameOfLife(int gridWidth, int gridHeight)
+        private int step = 0;
+
+        public GameOfLife(int gridWidth, int gridHeight, int threadGroupSize)
         {
+            Paused = true;
+
+            _threadGroupSize = threadGroupSize;
             _width = gridWidth;
             _height = gridHeight;
+
+            _rnd = new Random();
+
+            PointsToAdd = new List<Point>();
+            PointsToRemove = new List<Point>();
+
+            NumberFramesToWaitForUpdate = INIT_NUM_FRAMES_TO_WAIT_FOR_UPDATE;
         }
 
         public override void Initialise(GraphicsDevice device, Sdl2Window window, DisposeCollectorResourceFactory factory)
         {
-            //Compute Shader
-
-            _screenSizeBuffer = factory.CreateBuffer(new BufferDescription(16, BufferUsage.UniformBuffer));
-            _shiftBuffer = factory.CreateBuffer(new BufferDescription(16, BufferUsage.UniformBuffer));
-
             var shaderBytes = ReadEmbeddedAssetBytes("Shaders/conway.glsl");
+
+            _gridSizeBuffer = factory.CreateBuffer(new BufferDescription(16, BufferUsage.UniformBuffer));
+            _writeToggleBuffer = factory.CreateBuffer(new BufferDescription(16, BufferUsage.UniformBuffer));
 
             _computeShader = factory.CreateFromSpirv(new ShaderDescription(
                 ShaderStages.Compute,
@@ -55,31 +97,76 @@ namespace CustomVeldrid_ComputeShaderExample
                 "main"));
 
             _computeLayout = factory.CreateResourceLayout(new ResourceLayoutDescription(
+                new ResourceLayoutElementDescription("Last", ResourceKind.TextureReadWrite, ShaderStages.Compute),
+                new ResourceLayoutElementDescription("Current", ResourceKind.TextureReadWrite, ShaderStages.Compute),
                 new ResourceLayoutElementDescription("Tex", ResourceKind.TextureReadWrite, ShaderStages.Compute),
-                new ResourceLayoutElementDescription("ScreenSizeBuffer", ResourceKind.UniformBuffer, ShaderStages.Compute),
-                new ResourceLayoutElementDescription("ShiftBuffer", ResourceKind.UniformBuffer, ShaderStages.Compute)));
+                new ResourceLayoutElementDescription("GridSizeBuffer", ResourceKind.UniformBuffer, ShaderStages.Compute),
+                new ResourceLayoutElementDescription("WriteToggleBuffer", ResourceKind.UniformBuffer, ShaderStages.Compute)));
 
-            ComputePipelineDescription computePipelineDesc = new ComputePipelineDescription(
-                _computeShader,
-                _computeLayout,
-                16, 16, 1);
+            ComputePipelineDescription computePipelineDesc = new ComputePipelineDescription(_computeShader,
+                                                                                          _computeLayout,
+                                                                                          16,
+                                                                                          16,
+                                                                                          1);
             _computePipeline = factory.CreateComputePipeline(ref computePipelineDesc);
 
-            _computeTargetTexture = factory.CreateTexture(TextureDescription.Texture2D(
-                          (uint)_width,
-                          (uint)_height,
-                          1,
-                          1,
-                          PixelFormat.R32_G32_B32_A32_Float,
-                          TextureUsage.Sampled | TextureUsage.Storage));
+            _stagingTexture = factory.CreateTexture(TextureDescription.Texture2D(
+                      (uint)_width,
+                      (uint)_height,
+                      1,
+                      1,
+                      PixelFormat.R8_UInt,
+                      TextureUsage.Staging));
 
-            _computeTargetTextureView = factory.CreateTextureView(_computeTargetTexture);
+            _conwayTextures = new Texture[2];
 
-            _computeResourceSet = factory.CreateResourceSet(new ResourceSetDescription(
-                _computeLayout,
-                _computeTargetTextureView,
-                _screenSizeBuffer,
-                _shiftBuffer));
+            var zeros = Enumerable.Repeat((byte)0, _width * _height).ToArray();
+
+            _conwayTextureViews = new TextureView[2];
+
+            _conwayResourceSets = new ResourceSet[2];
+
+            for (var n = 0; n < 2; n++)
+            {
+                _conwayTextures[n] = factory.CreateTexture(TextureDescription.Texture2D(
+                      (uint)_width,
+                      (uint)_height,
+                      1,
+                      1,
+                      PixelFormat.R8_UInt,
+                      TextureUsage.Sampled | TextureUsage.Storage));
+
+
+                //Load it with zeros
+                device.UpdateTexture(_conwayTextures[n], zeros, 0, 0, 0, (uint)_width, (uint)_height, 1, 0, 0);
+
+                _conwayTextureViews[n] = factory.CreateTextureView(_conwayTextures[n]);
+
+            }
+
+            _renderableTexture = factory.CreateTexture(TextureDescription.Texture2D(
+                      (uint)_width,
+                      (uint)_height,
+                      1,
+                      1,
+                      PixelFormat.R32_G32_B32_A32_Float,
+                      TextureUsage.Sampled | TextureUsage.Storage));
+
+            _renderableTextureView = factory.CreateTextureView(_renderableTexture);
+
+            for (var n = 0; n < 2; n++)
+            {
+                var last = n == 0 ? 1 : 0;
+
+                _conwayResourceSets[n] = factory.CreateResourceSet(new ResourceSetDescription(
+                    _computeLayout,
+                    _conwayTextureViews[last],
+                    _conwayTextureViews[n],
+                    _renderableTextureView,
+                    _gridSizeBuffer,
+                    _writeToggleBuffer
+                    ));
+            }
 
             //Quad Rendering
 
@@ -107,8 +194,6 @@ namespace CustomVeldrid_ComputeShaderExample
 
             _graphicsLayout = factory.CreateResourceLayout(new ResourceLayoutDescription(
                 new ResourceLayoutElementDescription("Tex", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("Tex11", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
-                new ResourceLayoutElementDescription("Tex22", ResourceKind.TextureReadOnly, ShaderStages.Fragment),
                 new ResourceLayoutElementDescription("SS", ResourceKind.Sampler, ShaderStages.Fragment)));
 
             GraphicsPipelineDescription fullScreenQuadDesc = new GraphicsPipelineDescription(
@@ -123,11 +208,9 @@ namespace CustomVeldrid_ComputeShaderExample
             _graphicsPipeline = factory.CreateGraphicsPipeline(ref fullScreenQuadDesc);
 
             _graphicsResourceSet = factory.CreateResourceSet(new ResourceSetDescription(
-               _graphicsLayout,
-               _computeTargetTextureView,
-               _computeTargetTextureView,
-               _computeTargetTextureView,
-               device.PointSampler));
+                   _graphicsLayout,
+                   _renderableTextureView,
+                   device.PointSampler));
 
             InitResources(device, factory);
         }
@@ -158,7 +241,15 @@ namespace CustomVeldrid_ComputeShaderExample
 
             cl.Begin();
 
-            cl.UpdateBuffer(_screenSizeBuffer, 0, new Vector4(_width, _height, 0, 0));
+            var gridSize = new GridSize
+            {
+                Width = _width,
+                Height = _height,
+                Pad0 = 0,
+                Pad1 = 0
+            };
+
+            cl.UpdateBuffer(_gridSizeBuffer, 0, gridSize);
 
             Vector4[] quadVerts =
 {
@@ -181,23 +272,82 @@ namespace CustomVeldrid_ComputeShaderExample
             cl?.Dispose();
         }
 
-        public override void Update(float timeStepSeconds, InputSnapshot inputSnapshot)
-        {
-            _ticks += timeStepSeconds * 1000f;
-        }
+        public override void Update(float timeStepSeconds, InputSnapshot inputSnapshot) { }
 
         public override void Render(CommandList cl, GraphicsDevice device, ResourceSet texture0, ResourceSet texture1, ResourceSet texture2, ResourceSet texture3, Framebuffer framebufferTarget)
         {
-            Vector4 shifts = new Vector4(
-                _width * (float)Math.Cos(_ticks / 500f), // Red shift
-                _height * (float)Math.Sin(_ticks / 1250f), // Green shift
-                (float)Math.Sin(_ticks / 1000f), // Blue shift
-                0); // Padding
-            cl.UpdateBuffer(_shiftBuffer, 0, ref shifts);
+            if (PointsToAdd.Count > 0 || PointsToRemove.Count > 0 || ClearFlag)
+            {
+                //Pull Byte Data from Staging Texture
+
+                var data = new byte[_width * _height];
+
+                MappedResourceView<byte> mapRead = device.Map<byte>(_stagingTexture, MapMode.Read);
+
+                Marshal.Copy(mapRead.MappedResource.Data, data, 0, _width * _height);
+
+                device.Unmap(_stagingTexture);
+
+                // Modify Data
+                PointsToAdd.ForEach(p =>
+                {
+                    var index = (p.Y * _width) + p.X;
+                    data[index] = (byte)1;
+                });
+
+                PointsToAdd.Clear();
+
+                PointsToRemove.ForEach(p =>
+                {
+                    var index = (p.Y * _width) + p.X;
+                    data[index] = (byte)0;
+                });
+
+                PointsToRemove.Clear();
+
+                if(ClearFlag)
+                {
+                    ClearFlag = false;
+                    data = Enumerable.Repeat((byte)0, _width * _height).ToArray();
+                }
+
+                //Push Updated Data back to Staging Texture
+
+                MappedResourceView<byte> mapped = device.Map<byte>(_stagingTexture, MapMode.Write);
+
+                Marshal.Copy(data, 0, mapped.MappedResource.Data, _width * _height);
+
+                device.Unmap(_stagingTexture);
+                cl.CopyTexture(_stagingTexture, _conwayTextures[step]);
+            }
+
+            var runUpdateIteration = false;
+            if (!Paused)
+            {
+                frameCount++;
+            }
+
+            if (!Paused && frameCount >= NumberFramesToWaitForUpdate)
+            {
+                step = step == 0 ? 1 : 0;
+                frameCount = 0;
+                runUpdateIteration = true;
+            }
+
+            var writeToggle = new WriteToggle
+            {
+                Write = runUpdateIteration ? 1 : 0,
+                Pad2 = 0,
+                Pad3 = 0,
+                Pad4 = 0
+            };
+
+            cl.UpdateBuffer(_writeToggleBuffer, 0, writeToggle);
 
             cl.SetPipeline(_computePipeline);
-            cl.SetComputeResourceSet(0, _computeResourceSet);
-            cl.Dispatch((uint)(_width / 16), (uint)(_height / 16), 1);
+            cl.SetComputeResourceSet(0, _conwayResourceSets[step]);
+            cl.Dispatch((uint)(_width / _threadGroupSize), (uint)(_height / _threadGroupSize), 1);
+            cl.CopyTexture(_conwayTextures[step], _stagingTexture);
 
             cl.SetFramebuffer(framebufferTarget);
             cl.SetFullViewports();
@@ -212,9 +362,25 @@ namespace CustomVeldrid_ComputeShaderExample
 
         public override void DisposeOfResources()
         {
-            _computeTargetTexture?.Dispose();
-            _computeTargetTextureView?.Dispose();
-            _computeResourceSet?.Dispose();
+            _computeShader?.Dispose();
+            _computeLayout?.Dispose();
+            _computePipeline?.Dispose();
+            _gridSizeBuffer?.Dispose();
+            _vertexBuffer?.Dispose();
+            _indexBuffer?.Dispose();
+            _graphicsLayout?.Dispose();
+            _graphicsPipeline?.Dispose();
+            _graphicsResourceSet?.Dispose();
+            _stagingTexture?.Dispose();
+            _renderableTexture?.Dispose();
+            _renderableTextureView?.Dispose();
+
+            for (var n = 0; n < 2; n++)
+            {
+                _conwayTextures[n]?.Dispose();
+                _conwayTextureViews[n]?.Dispose();
+                _conwayResourceSets[n]?.Dispose();
+            }
         }
     }
 }

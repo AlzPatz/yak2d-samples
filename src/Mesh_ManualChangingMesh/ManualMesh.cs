@@ -87,27 +87,27 @@ namespace Mesh_ManualChangingMesh
                      FractionalOffset= 0.8f,
                      Reverse = false,
                      Vertical = true,
-                     WaveLength = 250.0f                
+                     WaveLength = 250.0f
                 },
             };
         }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texFlag = services.Surfaces.LoadTexture("pirate-flag", AssetSourceEnum.Embedded);
+            _texFlag = yak.Surfaces.LoadTexture("pirate-flag", AssetSourceEnum.Embedded);
 
-            _camera3D = services.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
 
-            _meshStage = services.Stages.CreateMeshRenderStage();
+            _meshStage = yak.Stages.CreateMeshRenderStage();
 
-            services.Stages.SetMeshRenderLightingProperties(_meshStage, new MeshRenderLightingPropertiesConfiguration
+            yak.Stages.SetMeshRenderLightingProperties(_meshStage, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
                 Shininess = 8.0f,
                 SpecularColour = 0.3f * Colour.White.ToVector3(),
             });
 
-            services.Stages.SetMeshRenderLights(_meshStage, new MeshRenderLightConfiguration[]
+            yak.Stages.SetMeshRenderLights(_meshStage, new MeshRenderLightConfiguration[]
             {
                 new MeshRenderLightConfiguration
                 {
@@ -124,9 +124,9 @@ namespace Mesh_ManualChangingMesh
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             _timecount += timeSinceLastDrawSeconds;
 
@@ -137,12 +137,12 @@ namespace Mesh_ManualChangingMesh
 
             var fraction = _timecount / DURATION;
 
-            services.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
-            services.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            yak.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
+            yak.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
 
             var mesh = BuildFlagMesh(fraction);
 
-            services.Stages.SetMeshRenderMesh(_meshStage, mesh);
+            yak.Stages.SetMeshRenderMesh(_meshStage, mesh);
         }
 
         private Vertex3D[] BuildFlagMesh(float frac)
@@ -395,14 +395,20 @@ namespace Mesh_ManualChangingMesh
             return shiftFromLastHori;
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
+        { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.DarkGray);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.DarkGray);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.MeshRender(_meshStage, _camera3D, _texFlag, WindowRenderTarget);
+            q.MeshRender(_meshStage, _camera3D, _texFlag, windowRenderTarget);
         }
 
         public override void Shutdown() { }

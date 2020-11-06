@@ -23,20 +23,20 @@ namespace StyleEffects_Static
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _shapes = services.Surfaces.CreateRenderTarget(480, 540);
-            _camera = services.Cameras.CreateCamera2D(480, 540);
-            _drawStage = services.Stages.CreateDrawStage();
+            _shapes = yak.Surfaces.CreateRenderTarget(480, 540);
+            _camera = yak.Cameras.CreateCamera2D(480, 540);
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _viewport0 = services.Stages.CreateViewport(60, 45, 360, 450);
-            _viewport1 = services.Stages.CreateViewport(540, 45, 360, 450);
+            _viewport0 = yak.Stages.CreateViewport(60, 45, 360, 450);
+            _viewport1 = yak.Stages.CreateViewport(540, 45, 360, 450);
 
-            _styleEffect0 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect1 = services.Stages.CreateStyleEffectsStage();
+            _styleEffect0 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect1 = yak.Stages.CreateStyleEffectsStage();
 
             //Ignore Transparent
-            services.Stages.SetStyleEffectsStaticConfig(_styleEffect0, new StaticConfiguration
+            yak.Stages.SetStyleEffectsStaticConfig(_styleEffect0, new StaticConfiguration
             {
                 IgnoreTransparent = 1,
                 Intensity = 0.6f,
@@ -45,7 +45,7 @@ namespace StyleEffects_Static
             });
 
             //Over everything, opacity
-            services.Stages.SetStyleEffectsStaticConfig(_styleEffect1, new StaticConfiguration
+            yak.Stages.SetStyleEffectsStaticConfig(_styleEffect1, new StaticConfiguration
             {
                 IgnoreTransparent = 0,
                 Intensity = 1.0f,
@@ -56,35 +56,40 @@ namespace StyleEffects_Static
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) 
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
-            drawing.DrawingHelpers.DrawColouredPoly(_drawStage,
+            draw.Helpers.DrawColouredPoly(_drawStage,
                                                     CoordinateSpace.Screen,
                                                     Colour.Purple,
                                                     Vector2.Zero,
                                                     8,
                                                     100.0f,
-                                                    0.5f);    
+                                                    0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.Draw(_drawStage, _camera, _shapes);
+            q.Draw(_drawStage, _camera, _shapes);
 
-            queue.SetViewport(_viewport0);
-            queue.StyleEffects(_styleEffect0, _shapes, WindowRenderTarget);
+            q.SetViewport(_viewport0);
+            q.StyleEffects(_styleEffect0, _shapes, windowRenderTarget);
 
-            queue.SetViewport(_viewport1);
-            queue.StyleEffects(_styleEffect1, _shapes, WindowRenderTarget);
+            q.SetViewport(_viewport1);
+            q.StyleEffects(_styleEffect1, _shapes, windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }

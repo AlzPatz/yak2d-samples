@@ -21,47 +21,52 @@ namespace StyleEffects_Pixellate
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _textureNinja = services.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded);
+            _textureNinja = yak.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded);
 
-            _viewport = services.Stages.CreateViewport(480 - 253, 270 - 260, 506, 520);
+            _viewport = yak.Stages.CreateViewport(480 - 253, 270 - 260, 506, 520);
 
-            _styleEffect = services.Stages.CreateStyleEffectsStage();
+            _styleEffect = yak.Stages.CreateStyleEffectsStage();
 
-            services.Stages.SetStyleEffectsPixellateConfig(_styleEffect, new PixellateConfiguration
+            yak.Stages.SetStyleEffectsPixellateConfig(_styleEffect, new PixellateConfiguration
             {
                 Intensity = 1.0f,
                 NumXDivisions = 32,
                 NumYDivisions = 32
             });
 
-            //_target = services.Surfaces.CreateRenderTarget(960, 540);
-            //_drawStage = services.Stages.CreateDrawStage();
-            //_camera = services.Cameras.CreateCamera2D();
+            //_target = yak.Surfaces.CreateRenderTarget(960, 540);
+            //_drawStage = yak.Stages.CreateDrawStage();
+            //_camera = yak.Cameras.CreateCamera2D();
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing drawing,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             //drawing.DrawingHelpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _textureNinja, Colour.White, Vector2.Zero, 506, 520, 0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
             //queue.Draw(_drawStage, _camera, _target);
 
-            queue.SetViewport(_viewport);
-            queue.StyleEffects(_styleEffect, _textureNinja, WindowRenderTarget);
-            queue.RemoveViewport();
+            q.SetViewport(_viewport);
+            q.StyleEffects(_styleEffect, _textureNinja, windowRenderTarget);
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }

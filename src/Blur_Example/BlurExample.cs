@@ -24,22 +24,22 @@ namespace Blur_Example
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _camera = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
-            _renderTarget = services.Surfaces.CreateRenderTarget(960, 540);
+            _renderTarget = yak.Surfaces.CreateRenderTarget(960, 540);
 
-            _texture = services.Surfaces.LoadTexture("camera", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("camera", AssetSourceEnum.Embedded);
 
-            _blurStage = services.Stages.CreateBlurStage(240, 135); // The smaller the internal intermediate blur surface, the lower quality the blur but the broader the blur spread (and faster the render)
+            _blurStage = yak.Stages.CreateBlurStage(240, 135); // The smaller the internal intermediate blur surface, the lower quality the blur but the broader the blur spread (and faster the render)
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
             //Generate a repeating 0 to 1 fraction loop
 
@@ -55,9 +55,9 @@ namespace Blur_Example
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            services.Stages.SetBlurConfig(_blurStage, new BlurEffectConfiguration
+            yak.Stages.SetBlurConfig(_blurStage, new BlurEffectConfiguration
             {
                 MixAmount = ((float)Math.Sin(_fraction * 2.0f * Math.PI) + 1.0f) * 0.5f,
                 NumberOfBlurSamples = 8,
@@ -65,17 +65,17 @@ namespace Blur_Example
             });
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transform, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            drawing.DrawingHelpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, Vector2.Zero, 960, 540, 0.5f);
+            draw.Helpers.DrawTexturedQuad(_drawStage, CoordinateSpace.Screen, _texture, Colour.White, Vector2.Zero, 960, 540, 0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, _renderTarget);
-            queue.Blur(_blurStage, _renderTarget, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, _renderTarget);
+            q.Blur(_blurStage, _renderTarget, windowRenderTarget);
         }
 
         public override void Shutdown() { }

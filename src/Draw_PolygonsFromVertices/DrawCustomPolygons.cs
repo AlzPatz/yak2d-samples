@@ -23,15 +23,15 @@ namespace Draw_PolygonsFromVertices
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _camera = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
-            _textureCity = services.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
-            _textureGrass = services.Surfaces.LoadTexture("grass", AssetSourceEnum.Embedded);
-            _textureMud = services.Surfaces.LoadTexture("mudrock", AssetSourceEnum.Embedded);
+            _textureCity = yak.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
+            _textureGrass = yak.Surfaces.LoadTexture("grass", AssetSourceEnum.Embedded);
+            _textureMud = yak.Surfaces.LoadTexture("mudrock", AssetSourceEnum.Embedded);
 
             CreateDrawRequests();
 
@@ -114,21 +114,26 @@ namespace Draw_PolygonsFromVertices
             };
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing drawing,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             drawing.Draw(_drawStage, _requestColouredTriangle);
             drawing.Draw(_drawStage, _requestTexturedRectange);
             drawing.Draw(_drawStage, _requestSkewedRectangleDualTextured);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, windowRenderTarget);
         }
 
         public override void Shutdown() { }

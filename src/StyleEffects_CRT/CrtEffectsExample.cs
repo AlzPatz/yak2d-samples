@@ -25,21 +25,21 @@ namespace StyleEffects_CRT
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texture = services.Surfaces.LoadTexture("platformer", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("platformer", AssetSourceEnum.Embedded);
 
-            _viewport0 = services.Stages.CreateViewport(0, 0, 480, 270);
-            _viewport1 = services.Stages.CreateViewport(480, 0, 480, 270);
-            _viewport2 = services.Stages.CreateViewport(0, 270, 480, 270);
-            _viewport3 = services.Stages.CreateViewport(480, 270, 480, 270);
+            _viewport0 = yak.Stages.CreateViewport(0, 0, 480, 270);
+            _viewport1 = yak.Stages.CreateViewport(480, 0, 480, 270);
+            _viewport2 = yak.Stages.CreateViewport(0, 270, 480, 270);
+            _viewport3 = yak.Stages.CreateViewport(480, 270, 480, 270);
 
-            _styleEffect1 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect2 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect3 = services.Stages.CreateStyleEffectsStage();
+            _styleEffect1 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect2 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect3 = yak.Stages.CreateStyleEffectsStage();
 
             //RGB filters Only
-            services.Stages.SetStyleEffectsCrtConfig(_styleEffect1, new CrtEffectConfiguration
+            yak.Stages.SetStyleEffectsCrtConfig(_styleEffect1, new CrtEffectConfiguration
             {
                 NumRgbFiltersHorizontally = 96,
                 NumRgbFiltersVertically = 54,
@@ -49,7 +49,7 @@ namespace StyleEffects_CRT
             });
 
             //Simple Scanlines
-            services.Stages.SetStyleEffectsCrtConfig(_styleEffect2, new CrtEffectConfiguration
+            yak.Stages.SetStyleEffectsCrtConfig(_styleEffect2, new CrtEffectConfiguration
             {
                 NumRgbFiltersHorizontally = 0,
                 NumRgbFiltersVertically = 0,
@@ -59,7 +59,7 @@ namespace StyleEffects_CRT
             });
 
             //RGB filters and Simple Scanlines
-            services.Stages.SetStyleEffectsCrtConfig(_styleEffect3, new CrtEffectConfiguration
+            yak.Stages.SetStyleEffectsCrtConfig(_styleEffect3, new CrtEffectConfiguration
             {
                 NumRgbFiltersHorizontally = 96,
                 NumRgbFiltersVertically = 54,
@@ -71,30 +71,30 @@ namespace StyleEffects_CRT
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewport0);
-            queue.Copy(_texture, WindowRenderTarget);
+            q.SetViewport(_viewport0);
+            q.Copy(_texture, windowRenderTarget);
 
-            queue.SetViewport(_viewport1);
-            queue.StyleEffects(_styleEffect1, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport1);
+            q.StyleEffects(_styleEffect1, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewport2);
-            queue.StyleEffects(_styleEffect2, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport2);
+            q.StyleEffects(_styleEffect2, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewport3);
-            queue.StyleEffects(_styleEffect3, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport3);
+            q.StyleEffects(_styleEffect3, _texture, windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }

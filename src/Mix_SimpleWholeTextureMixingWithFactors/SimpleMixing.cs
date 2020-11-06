@@ -23,13 +23,13 @@ namespace Mix_SimpleWholeTextureMixingWithFactors
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _viewport = services.Stages.CreateViewport(300, 0, 360, 540);
+            _viewport = yak.Stages.CreateViewport(300, 0, 360, 540);
 
             //We want to cut the texture up, so we load the colour data instead of generating an ITexture
 
-            var texData = services.Surfaces.LoadTextureColourData("seasons", AssetSourceEnum.Embedded);
+            var texData = yak.Surfaces.LoadTextureColourData("seasons", AssetSourceEnum.Embedded);
 
             var subTexWidth = texData.Width / 4;
 
@@ -58,17 +58,17 @@ namespace Mix_SimpleWholeTextureMixingWithFactors
 
             for (var t = 0; t < 4; t++)
             {
-                _textures[t] = services.Surfaces.CreateRgbaFromData(subTexWidth, texData.Height, subPixels[t]);
+                _textures[t] = yak.Surfaces.CreateRgbaFromData(subTexWidth, texData.Height, subPixels[t]);
             }
 
-            _mixStage = services.Stages.CreateMixStage();
+            _mixStage = yak.Stages.CreateMixStage();
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             //Set the fractional mixing for the textures (just loop through them)
 
@@ -103,18 +103,18 @@ namespace Mix_SimpleWholeTextureMixingWithFactors
                 vals[n] = 1.0f - delta;
             }
 
-            services.Stages.SetMixStageProperties(_mixStage, new Vector4(vals[0], vals[1], vals[2], vals[3]));
+            yak.Stages.SetMixStageProperties(_mixStage, new Vector4(vals[0], vals[1], vals[2], vals[3]));
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.SetViewport(_viewport);
-            queue.Mix(_mixStage, null, _textures[0], _textures[1], _textures[2], _textures[3], WindowRenderTarget);
-            queue.RemoveViewport();
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.SetViewport(_viewport);
+            q.Mix(_mixStage, null, _textures[0], _textures[1], _textures[2], _textures[3], windowRenderTarget);
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }

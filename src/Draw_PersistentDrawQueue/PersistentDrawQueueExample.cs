@@ -25,16 +25,16 @@ namespace Draw_PersistentDrawQueue
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _camera = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
             //Generate a repeating 0 to 1 fraction loop
 
@@ -50,7 +50,7 @@ namespace Draw_PersistentDrawQueue
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
         /*
             A DrawStage holds a single dynamic draw queue (generally cleared each frame) and any number of persistent draw queues
@@ -76,24 +76,29 @@ namespace Draw_PersistentDrawQueue
             The functionality is left in to give the user an option to run all drawing off one drawstage and reduce some of the sort and data transfer overhead
          */
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             // Create a persistent draw queue for the drawstage once
             if (!hasQueueBeenCreated)
             {
-                _persistent = drawing.CreatePersistentDrawQueue(_drawStage, GenerateDrawRequests(drawing.DrawingHelpers));
+                _persistent = draw.CreatePersistentDrawQueue(_drawStage, GenerateDrawRequests(draw.Helpers));
                 hasQueueBeenCreated = true;
             }
 
             //Each frame render a single draw request to the dynamic portion of the queue
             var position = new Vector2(400.0f * (float)Math.Sin(_fraction * Math.PI * 2.0f), 0.0f);
             var rotation = _fraction * (float)Math.PI * 2.0f;
-            drawing.DrawingHelpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Colour.OrangeRed, position, 80.0f, 80.0f, 0.5f, 1, rotation);
+            draw.Helpers.DrawColouredQuad(_drawStage, CoordinateSpace.Screen, Colour.OrangeRed, position, 80.0f, 80.0f, 0.5f, 1, rotation);
 
             //You can remove queues too (press delete)
             if (input.WasKeyReleasedThisFrame(KeyCode.Delete))
             {
-                drawing.RemovePersistentDrawQueue(_drawStage, _persistent);
+                draw.RemovePersistentDrawQueue(_drawStage, _persistent);
             }
         }
 
@@ -135,11 +140,11 @@ namespace Draw_PersistentDrawQueue
             return requests.ToArray();
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, windowRenderTarget);
         }
 
         public override void Shutdown() { }

@@ -27,27 +27,27 @@ namespace StyleEffects_OldMovie
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texture = services.Surfaces.LoadTexture("ghost-town", AssetSourceEnum.Embedded);
-            _offScreenTarget = services.Surfaces.CreateRenderTarget(540, 270);
+            _texture = yak.Surfaces.LoadTexture("ghost-town", AssetSourceEnum.Embedded);
+            _offScreenTarget = yak.Surfaces.CreateRenderTarget(540, 270);
 
-            _viewport0 = services.Stages.CreateViewport(0, 0, 480, 270);
-            _viewport1 = services.Stages.CreateViewport(480, 0, 480, 270);
-            _viewport2 = services.Stages.CreateViewport(0, 270, 480, 270);
-            _viewport3 = services.Stages.CreateViewport(480, 270, 480, 270);
+            _viewport0 = yak.Stages.CreateViewport(0, 0, 480, 270);
+            _viewport1 = yak.Stages.CreateViewport(480, 0, 480, 270);
+            _viewport2 = yak.Stages.CreateViewport(0, 270, 480, 270);
+            _viewport3 = yak.Stages.CreateViewport(480, 270, 480, 270);
 
-            _styleEffect0 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect1 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect2 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect3 = services.Stages.CreateStyleEffectsStage();
+            _styleEffect0 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect1 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect2 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect3 = yak.Stages.CreateStyleEffectsStage();
 
-            
+
             //Using Default Config Helper
-            services.Stages.SetStyleEffectsOldMovieConfig(_styleEffect0, OldMovieConfiguration.GenerateDefault());
-          
+            yak.Stages.SetStyleEffectsOldMovieConfig(_styleEffect0, OldMovieConfiguration.GenerateDefault());
+
             //Intense
-            services.Stages.SetStyleEffectsOldMovieConfig(_styleEffect1, new OldMovieConfiguration
+            yak.Stages.SetStyleEffectsOldMovieConfig(_styleEffect1, new OldMovieConfiguration
             {
                 Intensity = 1.0f,
                 Scratch = 0.04f,
@@ -75,7 +75,7 @@ namespace StyleEffects_OldMovie
             });
 
             //Light, no roll, no overexposure
-            services.Stages.SetStyleEffectsOldMovieConfig(_styleEffect2, new OldMovieConfiguration
+            yak.Stages.SetStyleEffectsOldMovieConfig(_styleEffect2, new OldMovieConfiguration
             {
                 Intensity = 0.6f,
                 Scratch = 0.05f,
@@ -103,8 +103,8 @@ namespace StyleEffects_OldMovie
             });
 
             //Mixing in a Gray Scale effect
-            _colourEffect = services.Stages.CreateColourEffectsStage();
-            services.Stages.SetColourEffectsConfig(_colourEffect, new ColourEffectConfiguration
+            _colourEffect = yak.Stages.CreateColourEffectsStage();
+            yak.Stages.SetColourEffectsConfig(_colourEffect, new ColourEffectConfiguration
             {
                 ClearBackground = false,
                 GrayScale = 1.0f,
@@ -116,41 +116,40 @@ namespace StyleEffects_OldMovie
                 SingleColour = 0.0f
             });
             //Use default
-            services.Stages.SetStyleEffectsOldMovieConfig(_styleEffect3, OldMovieConfiguration.GenerateDefault());
+            yak.Stages.SetStyleEffectsOldMovieConfig(_styleEffect3, OldMovieConfiguration.GenerateDefault());
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
-        
-        public override void Rendering(IRenderQueue queue)
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewport0);
-            queue.StyleEffects(_styleEffect0, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport0);
+            q.StyleEffects(_styleEffect0, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewport1);
-            queue.StyleEffects(_styleEffect1, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport1);
+            q.StyleEffects(_styleEffect1, _texture, windowRenderTarget);
 
-            queue.SetViewport(_viewport2);
-            queue.StyleEffects(_styleEffect2, _texture, WindowRenderTarget);
+            q.SetViewport(_viewport2);
+            q.StyleEffects(_styleEffect2, _texture, windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
 
-            queue.ColourEffects(_colourEffect, _texture, _offScreenTarget);
-            queue.SetViewport(_viewport3);
-            queue.StyleEffects(_styleEffect3, _offScreenTarget, WindowRenderTarget);
+            q.ColourEffects(_colourEffect, _texture, _offScreenTarget);
+            q.SetViewport(_viewport3);
+            q.StyleEffects(_styleEffect3, _offScreenTarget, windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }
     }
 }
-

@@ -27,11 +27,11 @@ namespace CustomShader_Example
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texture = services.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
+            _texture = yak.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
 
-            _customShaderStage = services.Stages.CreateCustomShaderStage("CustomBinaryFragment",
+            _customShaderStage = yak.Stages.CreateCustomShaderStage("CustomBinaryFragment",
                         AssetSourceEnum.Embedded,
                        new ShaderUniformDescription[]
                        {
@@ -51,9 +51,9 @@ namespace CustomShader_Example
 
             return true;
         }
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             _count += timeSinceLastDrawSeconds;
 
@@ -64,16 +64,16 @@ namespace CustomShader_Example
 
             var frac = _count / DURATION;
 
-            services.Stages.SetCustomShaderUniformValues<UniformsCustomShader>(_customShaderStage, "Threshold", new UniformsCustomShader { Amount = 0.5f * ((float)Math.Sin(frac * Math.PI * 2.0f) + 1.0f) });
+            yak.Stages.SetCustomShaderUniformValues<UniformsCustomShader>(_customShaderStage, "Threshold", new UniformsCustomShader { Amount = 0.5f * ((float)Math.Sin(frac * Math.PI * 2.0f) + 1.0f) });
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transform, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.CustomShader(_customShaderStage, _texture, null, null, null, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.CustomShader(_customShaderStage, _texture, null, null, null, windowRenderTarget);
         }
 
         public override void Shutdown() { }

@@ -1,10 +1,12 @@
-﻿using Yak2D;
+﻿using System;
+using Yak2D;
 
 namespace SampleBase
 {
     public abstract class ApplicationBase : IApplication
     {
-        protected IRenderTarget WindowRenderTarget;
+        public event EventHandler SwapChainFramebufferReCreated;
+        public event EventHandler NumberOfGamepadsChanged;
 
         private bool _appClosing = false;
 
@@ -41,15 +43,17 @@ namespace SampleBase
                 case FrameworkMessage.GraphicsDeviceRecreated:
                     CreateResources(services);
                     break;
-                case FrameworkMessage.WindowWasResized:
-                case FrameworkMessage.SwapChainFramebufferReCreated:
-                    WindowRenderTarget = services.Surfaces.ReturnMainWindowRenderTarget();
-                    break;
                 case FrameworkMessage.ApplicationWindowClosing:
                     _appClosing = true;
                     break;
+                case FrameworkMessage.SwapChainFramebufferReCreated:
+                    SwapChainFramebufferReCreated?.Invoke(this, new EventArgs());
+                    break;
                 case FrameworkMessage.GamepadAdded:
                 case FrameworkMessage.GamepadRemoved:
+                    NumberOfGamepadsChanged?.Invoke(this, new EventArgs());
+                    break;
+                case FrameworkMessage.WindowWasResized:
                 case FrameworkMessage.LowMemoryReported:
                 case FrameworkMessage.WindowGainedFocus:
                 case FrameworkMessage.WindowLostFocus:
@@ -64,11 +68,6 @@ namespace SampleBase
 
         public bool Update(IServices services, float timeSinceLastUpdateSeconds)
         {
-            if (WindowRenderTarget == null)
-            {
-                WindowRenderTarget = services.Surfaces.ReturnMainWindowRenderTarget();
-            }
-
             if(services.Input.WasKeyReleasedThisFrame(KeyCode.Escape))
             {
                 _appClosing = true;
@@ -81,9 +80,9 @@ namespace SampleBase
 
         public abstract void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds);
 
-        public abstract void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds);
+        public abstract void Drawing(IDrawing drawing, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds);
 
-        public abstract void Rendering(IRenderQueue queue);
+        public abstract void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget);
 
         public abstract void Shutdown();
     }

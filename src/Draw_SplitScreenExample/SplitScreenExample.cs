@@ -32,8 +32,9 @@ namespace Draw_SplitScreenExample
 
         private const float TANK_SIZE_SCALE = 0.1f;
         private const float TANK_MAX_SPEED = 700.0f;
-        private const float TANK_MAX_TURN_SPEED = 10.0f;
-        private const float TANK_MAX_TURN_RATE = 0.06f;
+        private const float TANK_MAX_TURN_SPEED = 200.0f;
+        private const float TANK_MAX_TURN_RATE = 2.0f;
+        private const float TANK_MIN_TURN_SCALAR = 0.5f;
         private const float TANK_ACCELERATION = 280.0f;
         private const float TANK_DECELERATION = 600.0f;
         private const float TANK_ROLLING_DECELERATION = 120.0f;
@@ -54,6 +55,7 @@ namespace Draw_SplitScreenExample
                                   TANK_MAX_SPEED,
                                   TANK_MAX_TURN_SPEED,
                                   TANK_MAX_TURN_RATE,
+                                  TANK_MIN_TURN_SCALAR,
                                   TANK_ACCELERATION,
                                   TANK_DECELERATION,
                                   TANK_ROLLING_DECELERATION);
@@ -67,6 +69,7 @@ namespace Draw_SplitScreenExample
                                   TANK_MAX_SPEED,
                                   TANK_MAX_TURN_SPEED,
                                   TANK_MAX_TURN_RATE,
+                                  TANK_MIN_TURN_SCALAR,
                                   TANK_ACCELERATION,
                                   TANK_DECELERATION,
                                   TANK_ROLLING_DECELERATION);
@@ -84,32 +87,32 @@ namespace Draw_SplitScreenExample
                                                 TANK_MAX_SPEED);
         }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStageTanks = services.Stages.CreateDrawStage();
-            _drawStageGui = services.Stages.CreateDrawStage();
+            _drawStageTanks = yak.Stages.CreateDrawStage();
+            _drawStageGui = yak.Stages.CreateDrawStage();
 
-            _cameraP1 = services.Cameras.CreateCamera2D(480, 540, 1.0f);
-            _cameraP2 = services.Cameras.CreateCamera2D(480, 540, 1.0f);
-            _cameraGui = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _cameraP1 = yak.Cameras.CreateCamera2D(480, 540, 1.0f);
+            _cameraP2 = yak.Cameras.CreateCamera2D(480, 540, 1.0f);
+            _cameraGui = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
-            _texMap = services.Surfaces.LoadTexture("map", AssetSourceEnum.Embedded);
-            _texTank = services.Surfaces.LoadTexture("tank", AssetSourceEnum.Embedded);
-            _texWheels = services.Surfaces.LoadTexture("wheels", AssetSourceEnum.Embedded);
+            _texMap = yak.Surfaces.LoadTexture("map", AssetSourceEnum.Embedded);
+            _texTank = yak.Surfaces.LoadTexture("tank", AssetSourceEnum.Embedded);
+            _texWheels = yak.Surfaces.LoadTexture("wheels", AssetSourceEnum.Embedded);
 
-            _viewportP1 = services.Stages.CreateViewport(0, 0, 480, 540);
-            _viewportP2 = services.Stages.CreateViewport(480, 0, 480, 540);
+            _viewportP1 = yak.Stages.CreateViewport(0, 0, 480, 540);
+            _viewportP2 = yak.Stages.CreateViewport(480, 0, 480, 540);
 
-            _mapTextureSize = services.Surfaces.GetSurfaceDimensions(_texMap);
-            _wheelsTextureSize = services.Surfaces.GetSurfaceDimensions(_texWheels);
-            _tankTextureSize = services.Surfaces.GetSurfaceDimensions(_texTank);
+            _mapTextureSize = yak.Surfaces.GetSurfaceDimensions(_texMap);
+            _wheelsTextureSize = yak.Surfaces.GetSurfaceDimensions(_texWheels);
+            _tankTextureSize = yak.Surfaces.GetSurfaceDimensions(_texTank);
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
-            var input = services.Input;
+            var input = yak.Input;
 
             _tankP1.Update(input, timeSinceLastUpdateSeconds);
             _tankP2.Update(input, timeSinceLastUpdateSeconds);
@@ -117,31 +120,30 @@ namespace Draw_SplitScreenExample
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             _trackingCamP1.Update(_tankP1, timeSinceLastDrawSeconds);
             _trackingCamP2.Update(_tankP2, timeSinceLastDrawSeconds);
 
-            services.Cameras.SetCamera2DWorldFocusZoomAndRotationAngleClockwiseFromPositiveY(_cameraP1,
+            yak.Cameras.SetCamera2DFocusZoomAndRotation(_cameraP1,
                                                                                              _tankP1.Position,
                                                                                              _trackingCamP1.Zoom,
-                                                                                             RadsToDegs(_trackingCamP1.Angle));
+                                                                                             _trackingCamP1.Angle);
 
-            services.Cameras.SetCamera2DWorldFocusZoomAndRotationAngleClockwiseFromPositiveY(_cameraP2,
+            yak.Cameras.SetCamera2DFocusZoomAndRotation(_cameraP2,
                                                                                              _tankP2.Position,
                                                                                              _trackingCamP2.Zoom,
-                                                                                             RadsToDegs(_trackingCamP2.Angle));
+                                                                                             _trackingCamP2.Angle);
         }
 
-        private float RadsToDegs(float rads)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
-            return 180.0f * (1.0f / (float)Math.PI) * rads;
-        }
-
-
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
-        {
-            var helper = drawing.DrawingHelpers;
+            var helper = draw.Helpers;
 
             //Draw the map
             helper.DrawTexturedQuad(_drawStageTanks,
@@ -171,7 +173,7 @@ namespace Draw_SplitScreenExample
                         _wheelsTextureSize.Height * TANK_SIZE_SCALE,
                         0.7f,
                         0,
-                        -_tankP1.Angle,
+                        _tankP1.Angle,
                         0.0f,
                         0.0f,
                         1.0f,
@@ -187,7 +189,7 @@ namespace Draw_SplitScreenExample
                     _tankTextureSize.Height * TANK_SIZE_SCALE,
                     0.65f,
                     0,
-                    -_tankP1.Angle,
+                    _tankP1.Angle,
                     0.0f,
                     0.0f,
                     1.0f,
@@ -205,7 +207,7 @@ namespace Draw_SplitScreenExample
                  _wheelsTextureSize.Height * TANK_SIZE_SCALE,
                  0.6f,
                  0,
-                 -_tankP2.Angle,
+                 _tankP2.Angle,
                  0.0f,
                  0.0f,
                  1.0f,
@@ -221,7 +223,7 @@ namespace Draw_SplitScreenExample
                     _tankTextureSize.Height * TANK_SIZE_SCALE,
                     0.55f,
                     0,
-                    -_tankP2.Angle,
+                    _tankP2.Angle,
                     0.0f,
                     0.0f,
                     1.0f,
@@ -245,7 +247,7 @@ namespace Draw_SplitScreenExample
                                     0);
 
             //Draw some UI text
-            drawing.DrawString(_drawStageGui,
+            draw.DrawString(_drawStageGui,
                                CoordinateSpace.Screen,
                                "Tanks",
                                Colour.White,
@@ -257,7 +259,7 @@ namespace Draw_SplitScreenExample
 
 
             //Controls Message UI
-            drawing.DrawString(_drawStageGui,
+            draw.DrawString(_drawStageGui,
                                CoordinateSpace.Screen,
                                string.Concat("Control with WASD and Arrow Keys"),
                                Colour.White,
@@ -268,19 +270,19 @@ namespace Draw_SplitScreenExample
                                0);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Yellow);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Yellow);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewportP1);
-            queue.Draw(_drawStageTanks, _cameraP1, WindowRenderTarget);
+            q.SetViewport(_viewportP1);
+            q.Draw(_drawStageTanks, _cameraP1, windowRenderTarget);
 
-            queue.SetViewport(_viewportP2);
-            queue.Draw(_drawStageTanks, _cameraP2, WindowRenderTarget);
+            q.SetViewport(_viewportP2);
+            q.Draw(_drawStageTanks, _cameraP2, windowRenderTarget);
 
-            queue.RemoveViewport();
-            queue.Draw(_drawStageGui, _cameraGui, WindowRenderTarget);
+            q.RemoveViewport();
+            q.Draw(_drawStageGui, _cameraGui, windowRenderTarget);
         }
 
         public override void Shutdown() { }

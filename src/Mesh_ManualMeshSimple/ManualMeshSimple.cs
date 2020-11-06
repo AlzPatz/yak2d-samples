@@ -23,22 +23,22 @@ namespace Mesh_ManualMeshSimple
             _cam3DLookAt = Vector3.Zero;
         }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texFlag = services.Surfaces.LoadTexture("pirate-flag", AssetSourceEnum.Embedded);
+            _texFlag = yak.Surfaces.LoadTexture("pirate-flag", AssetSourceEnum.Embedded);
 
-            _camera3D = services.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
 
-            _meshStage = services.Stages.CreateMeshRenderStage();
+            _meshStage = yak.Stages.CreateMeshRenderStage();
 
-            services.Stages.SetMeshRenderLightingProperties(_meshStage, new MeshRenderLightingPropertiesConfiguration
+            yak.Stages.SetMeshRenderLightingProperties(_meshStage, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
                 Shininess = 10.0f,
                 SpecularColour = Colour.White.ToVector3(),
             });
 
-            services.Stages.SetMeshRenderLights(_meshStage, new MeshRenderLightConfiguration[]
+            yak.Stages.SetMeshRenderLights(_meshStage, new MeshRenderLightConfiguration[]
             {
                 new MeshRenderLightConfiguration
                 {
@@ -54,7 +54,7 @@ namespace Mesh_ManualMeshSimple
 
             var mesh = BuildMesh();
 
-            services.Stages.SetMeshRenderMesh(_meshStage, mesh);
+            yak.Stages.SetMeshRenderMesh(_meshStage, mesh);
 
             return true;
         }
@@ -109,18 +109,18 @@ namespace Mesh_ManualMeshSimple
             return mesh.ToArray();
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.DarkGray);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.DarkGray);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.MeshRender(_meshStage, _camera3D, _texFlag, WindowRenderTarget);
+            q.MeshRender(_meshStage, _camera3D, _texFlag, windowRenderTarget);
         }
 
         public override void Shutdown() { }

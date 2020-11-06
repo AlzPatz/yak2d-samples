@@ -21,8 +21,9 @@ namespace Draw_Camera2DWorldAndScreen
 
         private const float CAR_SIZE_SCALE = 0.4f;
         private const float CAR_MAX_SPEED = 700.0f;
-        private const float CAR_MAX_TURN_SPEED = 10.0f;
-        private const float CAR_MAX_TURN_RATE = 0.06f;
+        private const float CAR_MAX_TURN_SPEED = 200.0f;
+        private const float CAR_MAX_TURN_RATE = 2.0f;
+        private const float CAR_MIN_TURN_SCALAR = 0.5f;
         private const float CAR_ACCELERATION = 280.0f;
         private const float CAR_DECELERATION = 600.0f;
         private const float CAR_ROLLING_DECELERATION = 120.0f;
@@ -49,33 +50,33 @@ namespace Draw_Camera2DWorldAndScreen
             _camZoom = MAX_ZOOM;
         }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _drawStage = services.Stages.CreateDrawStage();
+            _drawStage = yak.Stages.CreateDrawStage();
 
-            _camera = services.Cameras.CreateCamera2D(960, 540, 1.0f);
+            _camera = yak.Cameras.CreateCamera2D(960, 540, 1.0f);
 
-            _textureRoads = services.Surfaces.LoadTexture("roads", AssetSourceEnum.Embedded);
-            _textureCar = services.Surfaces.LoadTexture("car", AssetSourceEnum.Embedded);
+            _textureRoads = yak.Surfaces.LoadTexture("roads", AssetSourceEnum.Embedded);
+            _textureCar = yak.Surfaces.LoadTexture("car", AssetSourceEnum.Embedded);
 
-            _roadTextureSize = services.Surfaces.GetSurfaceDimensions(_textureRoads);
-            _carTextureSize = services.Surfaces.GetSurfaceDimensions(_textureCar);
+            _roadTextureSize = yak.Surfaces.GetSurfaceDimensions(_textureRoads);
+            _carTextureSize = yak.Surfaces.GetSurfaceDimensions(_textureCar);
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
             //Update Speed
 
             var acceleration = 0.0f;
 
-            if (services.Input.IsKeyCurrentlyPressed(KeyCode.Up))
+            if (yak.Input.IsKeyCurrentlyPressed(KeyCode.Up))
             {
                 acceleration = 1.0f;
             }
 
-            if (services.Input.IsKeyCurrentlyPressed(KeyCode.Down))
+            if (yak.Input.IsKeyCurrentlyPressed(KeyCode.Down))
             {
                 acceleration = -1.0f;
             }
@@ -84,7 +85,7 @@ namespace Draw_Camera2DWorldAndScreen
 
             if (acceleration == 1.0f)
             {
-                acceleration_amount =_carSpeed >= 0.0f ? CAR_ACCELERATION : CAR_DECELERATION;
+                acceleration_amount = _carSpeed >= 0.0f ? CAR_ACCELERATION : CAR_DECELERATION;
             }
 
             if (acceleration == -1.0f)
@@ -127,12 +128,12 @@ namespace Draw_Camera2DWorldAndScreen
 
             var turn = 0.0f;
 
-            if (services.Input.IsKeyCurrentlyPressed(KeyCode.Left))
+            if (yak.Input.IsKeyCurrentlyPressed(KeyCode.Left))
             {
                 turn = _carSpeed >= 0.0f ? -1.0f : 1.0f;
             }
 
-            if (services.Input.IsKeyCurrentlyPressed(KeyCode.Right))
+            if (yak.Input.IsKeyCurrentlyPressed(KeyCode.Right))
             {
                 turn = _carSpeed >= 0.0f ? 1.0f : -1.0f;
             }
@@ -146,7 +147,7 @@ namespace Draw_Camera2DWorldAndScreen
             }
             else
             {
-                turnScale = 1.0f - ((speed - CAR_MAX_TURN_SPEED) / CAR_MAX_TURN_SPEED);
+                turnScale = 1.0f - ((1.0f - CAR_MIN_TURN_SCALAR) * ((speed - CAR_MAX_TURN_SPEED) / (CAR_MAX_SPEED - CAR_MAX_TURN_SPEED)));
             }
 
             _carAngle += turnScale * turn * CAR_MAX_TURN_RATE * timeSinceLastUpdateSeconds;
@@ -164,7 +165,7 @@ namespace Draw_Camera2DWorldAndScreen
 
             //Update Position
 
-            var direction = Vector2.Transform(Vector2.UnitY, Matrix3x2.CreateRotation(_carAngle));
+            var direction = Vector2.Transform(Vector2.UnitY, Matrix3x2.CreateRotation(-_carAngle));
 
             _carPosition += direction * _carSpeed * timeSinceLastUpdateSeconds;
 
@@ -193,7 +194,7 @@ namespace Draw_Camera2DWorldAndScreen
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) 
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             var speed = (float)Math.Abs(_carSpeed);
             var targetZoom = MIN_ZOOM + ((MAX_ZOOM - MIN_ZOOM) * (1.0f - (speed / CAR_MAX_SPEED)));
@@ -210,13 +211,11 @@ namespace Draw_Camera2DWorldAndScreen
                     _camAngle += twoPi;
                 }
             }
-            
+
             _camAngle = SmoothTowards(_camAngle, _carAngle, timeSinceLastDrawSeconds);
             _camZoom = SmoothTowards(_camZoom, targetZoom, timeSinceLastDrawSeconds);
 
-            var degAngle = 180.0f * (1.0f / (float)Math.PI) * _camAngle;
-
-            services.Cameras.SetCamera2DWorldFocusZoomAndRotationAngleClockwiseFromPositiveY(_camera, _carPosition, _camZoom, degAngle);
+            yak.Cameras.SetCamera2DFocusZoomAndRotation(_camera, _carPosition, _camZoom, _camAngle);
         }
 
         private float SmoothTowards(float current, float target, float seconds)
@@ -228,9 +227,14 @@ namespace Draw_Camera2DWorldAndScreen
             return current + amount_in_period;
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
-            var helper = drawing.DrawingHelpers;
+            var helper = draw.Helpers;
 
             //Draw a 9x9 equivalent quad for the roads, so that the car can drive over the edge before being teleported back
             helper.DrawTexturedQuad(_drawStage,
@@ -259,7 +263,7 @@ namespace Draw_Camera2DWorldAndScreen
                         _carTextureSize.Height * CAR_SIZE_SCALE,
                         0.7f,
                         0,
-                        -_carAngle,
+                        _carAngle,
                         0.0f,
                         0.0f,
                         1.0f,
@@ -277,7 +281,7 @@ namespace Draw_Camera2DWorldAndScreen
                                     0);
 
             //Draw UI Speed in Screen Space
-            drawing.DrawString(_drawStage,
+            draw.DrawString(_drawStage,
                                CoordinateSpace.Screen,
                                string.Concat("Speed: ", (_carSpeed / 10.0f).ToString("0"), "mph"),
                                Colour.White,
@@ -289,7 +293,7 @@ namespace Draw_Camera2DWorldAndScreen
 
 
             //Controls Message UI
-            drawing.DrawString(_drawStage,
+            draw.DrawString(_drawStage,
                                CoordinateSpace.Screen,
                                string.Concat("Drive with the Arrow Keys"),
                                Colour.White,
@@ -300,11 +304,11 @@ namespace Draw_Camera2DWorldAndScreen
                                0);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
-            queue.Draw(_drawStage, _camera, WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
+            q.Draw(_drawStage, _camera, windowRenderTarget);
         }
 
         public override void Shutdown() { }

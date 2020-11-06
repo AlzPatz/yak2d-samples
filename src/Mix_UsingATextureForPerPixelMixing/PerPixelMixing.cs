@@ -23,18 +23,18 @@ namespace Mix_UsingATextureForPerPixelMixing
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _mixStage = services.Stages.CreateMixStage();
-            services.Stages.SetMixStageProperties(_mixStage, Vector4.One); //Turn all on at the per texture level
+            _mixStage = yak.Stages.CreateMixStage();
+            yak.Stages.SetMixStageProperties(_mixStage, Vector4.One); //Turn all on at the per texture level
 
-            _textureNight = services.Surfaces.LoadTexture("city-night", AssetSourceEnum.Embedded);
-            _textureDay = services.Surfaces.LoadTexture("city-day", AssetSourceEnum.Embedded);
+            _textureNight = yak.Surfaces.LoadTexture("city-night", AssetSourceEnum.Embedded);
+            _textureDay = yak.Surfaces.LoadTexture("city-day", AssetSourceEnum.Embedded);
 
-            _mixTarget = services.Surfaces.CreateRenderTarget(960, 540);
-            _drawStage = services.Stages.CreateDrawStage(true, BlendState.Override); //Override important to use 4 components of texture as seperate channels to draw too
+            _mixTarget = yak.Surfaces.CreateRenderTarget(960, 540);
+            _drawStage = yak.Stages.CreateDrawStage(true, BlendState.Override); //Override important to use 4 components of texture as seperate channels to draw too
 
-            _camera = services.Cameras.CreateCamera2D(960, 540);
+            _camera = yak.Cameras.CreateCamera2D(960, 540);
 
             var radius = 128;
             var dim = 2 * radius;
@@ -69,24 +69,29 @@ namespace Mix_UsingATextureForPerPixelMixing
                 }
             }
 
-            _textureLight = services.Surfaces.CreateRgbaFromData((uint)dim, (uint)dim, pixels);
+            _textureLight = yak.Surfaces.CreateRgbaFromData((uint)dim, (uint)dim, pixels);
 
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds)
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
         {
-            _mousePosition = (services.Input.MousePosition - (0.5f * new Vector2(960.0f, 540.0f)));
+            _mousePosition = (yak.Input.MousePosition - (0.5f * new Vector2(960.0f, 540.0f)));
             _mousePosition.Y = -_mousePosition.Y;
             return true;
         }
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
             var size = 256.0f;
-            drawing.DrawingHelpers.DrawTexturedQuad(_drawStage,
+            draw.Helpers.DrawTexturedQuad(_drawStage,
                                                     CoordinateSpace.Screen,
                                                     _textureLight,
                                                     Colour.White,
@@ -96,15 +101,15 @@ namespace Mix_UsingATextureForPerPixelMixing
                                                     0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.ClearColour(_mixTarget, new Colour(1.0f, 0.0f, 0.0f, 0.0f));
-            queue.Draw(_drawStage, _camera, _mixTarget);
+            q.ClearColour(_mixTarget, new Colour(1.0f, 0.0f, 0.0f, 0.0f));
+            q.Draw(_drawStage, _camera, _mixTarget);
 
-            queue.Mix(_mixStage, _mixTarget, _textureNight, _textureDay, null, null, WindowRenderTarget);
+            q.Mix(_mixStage, _mixTarget, _textureNight, _textureDay, null, null, windowRenderTarget);
         }
 
         public override void Shutdown() { }

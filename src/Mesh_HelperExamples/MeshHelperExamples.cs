@@ -56,48 +56,48 @@ namespace Mesh_HelperExamples
             _cam3DLookAt = Vector3.Zero;
         }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _texCity = services.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
-            _texMap = services.Surfaces.LoadTexture("map", AssetSourceEnum.Embedded);
-            _texDice = services.Surfaces.LoadTexture("onetosix", AssetSourceEnum.Embedded);
-            _texGrid = services.Surfaces.LoadTexture("grid", AssetSourceEnum.Embedded);
+            _texCity = yak.Surfaces.LoadTexture("city", AssetSourceEnum.Embedded);
+            _texMap = yak.Surfaces.LoadTexture("map", AssetSourceEnum.Embedded);
+            _texDice = yak.Surfaces.LoadTexture("onetosix", AssetSourceEnum.Embedded);
+            _texGrid = yak.Surfaces.LoadTexture("grid", AssetSourceEnum.Embedded);
 
-            _offScreenTarget_Quad = services.Surfaces.CreateRenderTarget(960, 540);
-            _offScreenTarget_CRT = services.Surfaces.CreateRenderTarget(960, 540);
-            _offScreenTarget_Sphere = services.Surfaces.CreateRenderTarget(960, 540);
-            _offScreenTarget_Rect = services.Surfaces.CreateRenderTarget(960, 540);
+            _offScreenTarget_Quad = yak.Surfaces.CreateRenderTarget(960, 540);
+            _offScreenTarget_CRT = yak.Surfaces.CreateRenderTarget(960, 540);
+            _offScreenTarget_Sphere = yak.Surfaces.CreateRenderTarget(960, 540);
+            _offScreenTarget_Rect = yak.Surfaces.CreateRenderTarget(960, 540);
 
-            _drawStage_Quad = services.Stages.CreateDrawStage();
-            _drawStage_CRT = services.Stages.CreateDrawStage();
-            _drawStage_Sphere = services.Stages.CreateDrawStage();
-            _drawStage_Rect = services.Stages.CreateDrawStage();
+            _drawStage_Quad = yak.Stages.CreateDrawStage();
+            _drawStage_CRT = yak.Stages.CreateDrawStage();
+            _drawStage_Sphere = yak.Stages.CreateDrawStage();
+            _drawStage_Rect = yak.Stages.CreateDrawStage();
 
-            _viewport_Quad = services.Stages.CreateViewport(0, 0, 480, 270);
-            _viewport_CRT = services.Stages.CreateViewport(480, 0, 480, 270);
-            _viewport_Sphere = services.Stages.CreateViewport(0, 270, 480, 270);
-            _viewport_Rect = services.Stages.CreateViewport(480, 270, 480, 270);
+            _viewport_Quad = yak.Stages.CreateViewport(0, 0, 480, 270);
+            _viewport_CRT = yak.Stages.CreateViewport(480, 0, 480, 270);
+            _viewport_Sphere = yak.Stages.CreateViewport(0, 270, 480, 270);
+            _viewport_Rect = yak.Stages.CreateViewport(480, 270, 480, 270);
 
-            _camera2D = services.Cameras.CreateCamera2D();
+            _camera2D = yak.Cameras.CreateCamera2D();
 
-            _camera3D = services.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
 
-            _meshStage_Quad = services.Stages.CreateMeshRenderStage();
-            _meshStage_CRT = services.Stages.CreateMeshRenderStage();
-            _meshStage_Sphere = services.Stages.CreateMeshRenderStage();
-            _meshStage_Rect = services.Stages.CreateMeshRenderStage();
+            _meshStage_Quad = yak.Stages.CreateMeshRenderStage();
+            _meshStage_CRT = yak.Stages.CreateMeshRenderStage();
+            _meshStage_Sphere = yak.Stages.CreateMeshRenderStage();
+            _meshStage_Rect = yak.Stages.CreateMeshRenderStage();
 
-            _meshBuilder = services.Helpers.CommonMeshBuilder;
+            _meshBuilder = yak.Helpers.CommonMeshBuilder;
 
             //Directional Light with Yellow Specular highlights for the Globe
-            services.Stages.SetMeshRenderLightingProperties(_meshStage_Sphere, new MeshRenderLightingPropertiesConfiguration
+            yak.Stages.SetMeshRenderLightingProperties(_meshStage_Sphere, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
                 Shininess = 10.0f,
                 SpecularColour = Colour.Yellow.ToVector3(),
             });
 
-            services.Stages.SetMeshRenderLights(_meshStage_Sphere, new MeshRenderLightConfiguration[]
+            yak.Stages.SetMeshRenderLights(_meshStage_Sphere, new MeshRenderLightConfiguration[]
             {
                 new MeshRenderLightConfiguration
                 {
@@ -112,14 +112,14 @@ namespace Mesh_HelperExamples
             });
 
             //Directional Light (all white) for CRT surface
-            services.Stages.SetMeshRenderLightingProperties(_meshStage_CRT, new MeshRenderLightingPropertiesConfiguration
+            yak.Stages.SetMeshRenderLightingProperties(_meshStage_CRT, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
                 Shininess = 10.0f,
                 SpecularColour = Colour.White.ToVector3()
             });
 
-            services.Stages.SetMeshRenderLights(_meshStage_CRT, new MeshRenderLightConfiguration[]
+            yak.Stages.SetMeshRenderLights(_meshStage_CRT, new MeshRenderLightConfiguration[]
             {
                 new MeshRenderLightConfiguration
                 {
@@ -134,14 +134,14 @@ namespace Mesh_HelperExamples
             });
 
             //Spotlight for Quad Surface
-            services.Stages.SetMeshRenderLightingProperties(_meshStage_Quad, new MeshRenderLightingPropertiesConfiguration
+            yak.Stages.SetMeshRenderLightingProperties(_meshStage_Quad, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
                 Shininess = 0.0f,
                 SpecularColour = Colour.White.ToVector3()
             });
 
-            services.Stages.SetMeshRenderLights(_meshStage_Quad, new MeshRenderLightConfiguration[]
+            yak.Stages.SetMeshRenderLights(_meshStage_Quad, new MeshRenderLightConfiguration[]
             {
                 new MeshRenderLightConfiguration
                 {
@@ -160,14 +160,14 @@ namespace Mesh_HelperExamples
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            services.Cameras.SetCamera2DFocusAndZoom(_camera2D, _camPosition, _camZoom);
+            yak.Cameras.SetCamera2DFocusAndZoom(_camera2D, _camPosition, _camZoom);
 
-            services.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
-            services.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            yak.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
+            yak.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
 
             _rotationAngle += ROTATION_SPEED * timeSinceLastDrawSeconds;
             while (_rotationAngle > 360)
@@ -180,20 +180,25 @@ namespace Mesh_HelperExamples
             var meshSphere = _meshBuilder.CreateSphericalMesh(Vector3.Zero, 150.0f, 150.0f, 150.0f, _rotationAngle, 64, 64);
             var meshRect = _meshBuilder.CreateRectangularCuboidMesh(new Vector3(-150.0f, -100.0f, -100.0f), 100.0f, 100.0f, 100.0f, _rotationAngle);
 
-            services.Stages.SetMeshRenderMesh(_meshStage_Quad, meshQuad);
-            services.Stages.SetMeshRenderMesh(_meshStage_CRT, meshCRT);
-            services.Stages.SetMeshRenderMesh(_meshStage_Sphere, meshSphere);
-            services.Stages.SetMeshRenderMesh(_meshStage_Rect, meshRect);
+            yak.Stages.SetMeshRenderMesh(_meshStage_Quad, meshQuad);
+            yak.Stages.SetMeshRenderMesh(_meshStage_CRT, meshCRT);
+            yak.Stages.SetMeshRenderMesh(_meshStage_Sphere, meshSphere);
+            yak.Stages.SetMeshRenderMesh(_meshStage_Rect, meshRect);
         }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
+        public override void Drawing(IDrawing draw,
+                                     IFps fps,
+                                     IInput input,
+                                     ICoordinateTransforms transforms,
+                                     float timeSinceLastDrawSeconds,
+                                     float timeSinceLastUpdateSeconds)
         {
-            drawing.ClearDynamicDrawRequestQueue(_drawStage_Quad);
-            drawing.ClearDynamicDrawRequestQueue(_drawStage_CRT);
-            drawing.ClearDynamicDrawRequestQueue(_drawStage_Sphere);
-            drawing.ClearDynamicDrawRequestQueue(_drawStage_Rect);
+            draw.ClearDynamicDrawRequestQueue(_drawStage_Quad);
+            draw.ClearDynamicDrawRequestQueue(_drawStage_CRT);
+            draw.ClearDynamicDrawRequestQueue(_drawStage_Sphere);
+            draw.ClearDynamicDrawRequestQueue(_drawStage_Rect);
 
-            var tools = drawing.DrawingHelpers;
+            var tools = draw.Helpers;
 
             tools.DrawTexturedQuad(_drawStage_Quad, CoordinateSpace.Screen, _texGrid, Colour.White, Vector2.Zero, 960, 540, 0.5f);
             tools.DrawTexturedQuad(_drawStage_CRT, CoordinateSpace.Screen, _texCity, Colour.White, Vector2.Zero, 960, 540, 0.5f);
@@ -201,41 +206,41 @@ namespace Mesh_HelperExamples
             tools.DrawTexturedQuad(_drawStage_Rect, CoordinateSpace.Screen, _texDice, Colour.White, Vector2.Zero, 960, 540, 0.5f);
         }
 
-        public override void Rendering(IRenderQueue queue)
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
 
-            queue.ClearColour(_offScreenTarget_Quad, new Colour(0.5f, 0.5f, 0.3f, 1.0f));
-            queue.ClearDepth(_offScreenTarget_Quad);
-            queue.ClearColour(_offScreenTarget_CRT, Colour.Red);
-            queue.ClearDepth(_offScreenTarget_CRT);
-            queue.ClearColour(_offScreenTarget_Sphere, Colour.White);
-            queue.ClearDepth(_offScreenTarget_Sphere);
-            queue.ClearColour(_offScreenTarget_Rect, Colour.White);
-            queue.ClearDepth(_offScreenTarget_Rect);
+            q.ClearColour(_offScreenTarget_Quad, new Colour(0.5f, 0.5f, 0.3f, 1.0f));
+            q.ClearDepth(_offScreenTarget_Quad);
+            q.ClearColour(_offScreenTarget_CRT, Colour.Red);
+            q.ClearDepth(_offScreenTarget_CRT);
+            q.ClearColour(_offScreenTarget_Sphere, Colour.White);
+            q.ClearDepth(_offScreenTarget_Sphere);
+            q.ClearColour(_offScreenTarget_Rect, Colour.White);
+            q.ClearDepth(_offScreenTarget_Rect);
 
             var textureMeshes = true;
             if (textureMeshes)
             {
-                queue.Draw(_drawStage_Quad, _camera2D, _offScreenTarget_Quad);
-                queue.Draw(_drawStage_CRT, _camera2D, _offScreenTarget_CRT);
-                queue.Draw(_drawStage_Sphere, _camera2D, _offScreenTarget_Sphere);
-                queue.Draw(_drawStage_Rect, _camera2D, _offScreenTarget_Rect);
+                q.Draw(_drawStage_Quad, _camera2D, _offScreenTarget_Quad);
+                q.Draw(_drawStage_CRT, _camera2D, _offScreenTarget_CRT);
+                q.Draw(_drawStage_Sphere, _camera2D, _offScreenTarget_Sphere);
+                q.Draw(_drawStage_Rect, _camera2D, _offScreenTarget_Rect);
             }
-            queue.SetViewport(_viewport_Quad);
-            queue.MeshRender(_meshStage_Quad, _camera3D, _offScreenTarget_Quad, WindowRenderTarget);
+            q.SetViewport(_viewport_Quad);
+            q.MeshRender(_meshStage_Quad, _camera3D, _offScreenTarget_Quad, windowRenderTarget);
 
-            queue.SetViewport(_viewport_CRT);
-            queue.MeshRender(_meshStage_CRT, _camera3D, _offScreenTarget_CRT, WindowRenderTarget);
+            q.SetViewport(_viewport_CRT);
+            q.MeshRender(_meshStage_CRT, _camera3D, _offScreenTarget_CRT, windowRenderTarget);
 
-            queue.SetViewport(_viewport_Sphere);
-            queue.MeshRender(_meshStage_Sphere, _camera3D, _offScreenTarget_Sphere, WindowRenderTarget);
+            q.SetViewport(_viewport_Sphere);
+            q.MeshRender(_meshStage_Sphere, _camera3D, _offScreenTarget_Sphere, windowRenderTarget);
 
-            queue.SetViewport(_viewport_Rect);
-            queue.MeshRender(_meshStage_Rect, _camera3D, _offScreenTarget_Rect, WindowRenderTarget);
+            q.SetViewport(_viewport_Rect);
+            q.MeshRender(_meshStage_Rect, _camera3D, _offScreenTarget_Rect, windowRenderTarget);
         }
 
         public override void Shutdown() { }

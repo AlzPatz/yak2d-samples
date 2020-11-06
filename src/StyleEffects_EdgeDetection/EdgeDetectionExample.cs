@@ -18,25 +18,25 @@ namespace StyleEffects_EdgeDetection
 
         public override void OnStartup() { }
 
-        public override bool CreateResources(IServices services)
+        public override bool CreateResources(IServices yak)
         {
-            _textureNinja = services.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded);
+            _textureNinja = yak.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded);
 
-            _viewport0 = services.Stages.CreateViewport(60, 45, 360, 450);
-            _viewport1 = services.Stages.CreateViewport(540, 45, 360, 450);
+            _viewport0 = yak.Stages.CreateViewport(60, 45, 360, 450);
+            _viewport1 = yak.Stages.CreateViewport(540, 45, 360, 450);
 
-            _styleEffect0 = services.Stages.CreateStyleEffectsStage();
-            _styleEffect1 = services.Stages.CreateStyleEffectsStage();
+            _styleEffect0 = yak.Stages.CreateStyleEffectsStage();
+            _styleEffect1 = yak.Stages.CreateStyleEffectsStage();
 
             //Sobel
-            services.Stages.SetStyleEffectsEdgeDetectionConfig(_styleEffect0, new EdgeDetectionConfiguration
+            yak.Stages.SetStyleEffectsEdgeDetectionConfig(_styleEffect0, new EdgeDetectionConfiguration
             {
                 Intensity = 1.0f,
                 IsFreichen = false
             });
 
             //Freichen
-            services.Stages.SetStyleEffectsEdgeDetectionConfig(_styleEffect1, new EdgeDetectionConfiguration
+            yak.Stages.SetStyleEffectsEdgeDetectionConfig(_styleEffect1, new EdgeDetectionConfiguration
             {
                 Intensity = 1.0f,
                 IsFreichen = true
@@ -45,23 +45,23 @@ namespace StyleEffects_EdgeDetection
             return true;
         }
 
-        public override bool Update_(IServices services, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
 
-        public override void PreDrawing(IServices services, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
-        public override void Drawing(IDrawing drawing, IFps fps, IInput input, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
-        public override void Rendering(IRenderQueue queue)
+        public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transforms, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
+        public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
         {
-            queue.ClearColour(WindowRenderTarget, Colour.Clear);
-            queue.ClearDepth(WindowRenderTarget);
+            q.ClearColour(windowRenderTarget, Colour.Clear);
+            q.ClearDepth(windowRenderTarget);
 
-            queue.SetViewport(_viewport0);
-            queue.StyleEffects(_styleEffect0, _textureNinja, WindowRenderTarget);
+            q.SetViewport(_viewport0);
+            q.StyleEffects(_styleEffect0, _textureNinja, windowRenderTarget);
 
-            queue.SetViewport(_viewport1);
-            queue.StyleEffects(_styleEffect1, _textureNinja, WindowRenderTarget);
+            q.SetViewport(_viewport1);
+            q.StyleEffects(_styleEffect1, _textureNinja, windowRenderTarget);
 
-            queue.RemoveViewport();
+            q.RemoveViewport();
         }
 
         public override void Shutdown() { }
