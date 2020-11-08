@@ -64,7 +64,7 @@ namespace Input_GamepadUsage
             {
                 if (_gamepadId != null)
                 {
-                    if (!input.ConnectedGamepadIds().Contains((int)_gamepadId))
+                    if (!input.IsGamepadIdValid((int)_gamepadId))
                     {
                         //We lost connection to the gamepad
                         _gamepadId = null;
@@ -190,37 +190,37 @@ namespace Input_GamepadUsage
             var holdColour = Colour.Blue;
 
             var faceButtonsCentre = new Vector2(200.0f, 0.0f);
-            var faceButtonSpacing = 60.0f;
-            var faceButtonRadius = 16.0f;
+            var faceButtonSpacing = 48.0f;
+            var faceButtonRadius = 24.0f;
 
             var controlButtonsCentre = new Vector2(0.0f, 0.0f);
             var controlButtonSpacing = 60.0f;
-            var controlButtonRadius = 8.0f;
+            var controlButtonRadius = 16.0f;
 
-            var stickButtonRadius = 16.0f;
-            var leftStickCentre = new Vector2(-200.0f, 100.0f);
-            var rightStickCentre = new Vector2(150.0f, -100.0f);
+            var stickButtonRadius = 24.0f;
+            var leftStickCentre = new Vector2(-200.0f, 0.0f);
+            var rightStickCentre = new Vector2(100.0f, -100.0f);
 
-            var shoulderButtonsY = 150.0f;
+            var shoulderButtonsY = 110.0f;
             var shoulderButtonsThickness = 30.0f;
             var shoulderButtonsWidth = 80.0f;
             var leftShoulderButtonX = -200.0f;
             var rightShoulderButtonX = 200.0f;
 
-            var dPadCentre = new Vector2(-100.0f, -150.0f);
-            var dPadDisFromOrigin = 24.0f;
-            var dPadLen = 24.0f;
-            var dPadWidth = 12.0f;
+            var dPadCentre = new Vector2(-100.0f, -100.0f);
+            var dPadDisFromOrigin = 36.0f;
+            var dPadLen = 32.0f;
+            var dPadWidth = 24.0f;
 
-            var triggerBaseY = 200.0f;
-            var triggerMaxHeight = 50.0f;
+            var triggerBaseY = 150.0f;
+            var triggerMaxHeight = 70.0f;
             var triggerWidth = 60.0f;
 
-            var stickGap = 9.0f;
-            var stickMaxLength = 20.0f;
+            var stickGap = 8f;
+            var stickMaxLength = 22.0f;
             var stickWidth = 12.0f;
-            var stickHeadWidth = 20.0f;
-            var stickHeadLength = 8.0f;
+            var stickHeadWidth = 24.0f;
+            var stickHeadLength = 12.0f;
 
             var deadzone = 0.1f;
 
@@ -345,7 +345,29 @@ namespace Input_GamepadUsage
 
                 drawStick(h, leftStickCentre, leftStick, stickGap, stickMaxLength);
                 drawStick(h, rightStickCentre, rightStick, stickGap, stickMaxLength);
+
+                //Display how long A has been held down for
+                var time = input.HowLongHasGamepadButtonBeenHeldDown((int)_gamepadId, GamepadButton.A);
+                draw.DrawString(_drawStage,
+                            CoordinateSpace.Screen,
+                            string.Concat("Held ", time.ToString("0.0"), " Seconds"),
+                            Colour.White,
+                            22,
+                            new Vector2(230.0f, -80.0f),
+                            TextJustify.Left,
+                            0.2f,
+                            0);
             }
+
+            draw.DrawString(_drawStage,
+                            CoordinateSpace.Screen,
+                            string.Concat("Number of connected Gamepads: ", input.ConnectedGamepadIds().Count),
+                            Colour.White,
+                            28,
+                            new Vector2(0.0f, -210.0f),
+                            TextJustify.Centre,
+                            0.2f,
+                            0);
         }
 
         public override void Rendering(IRenderQueue q, IRenderTarget windowRenderTarget)
