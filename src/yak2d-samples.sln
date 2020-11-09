@@ -79,11 +79,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yak2D.Tests", "..\..\yak2d\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper_CoordinateTranforms", "Helper_CoordinateTranforms\Helper_CoordinateTranforms.csproj", "{B15D68F0-F5B6-4CC7-A7A5-3543D45253F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Window_ChangingWindowProperties", "Window_ChangingWindowProperties\Window_ChangingWindowProperties.csproj", "{2FBFE30E-B25E-4241-80C1-56FD0604FD1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Window_ChangingWindowProperties", "Window_ChangingWindowProperties\Window_ChangingWindowProperties.csproj", "{2FBFE30E-B25E-4241-80C1-56FD0604FD1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Input_GamepadUsage", "Input_GamepadUsage\Input_GamepadUsage.csproj", "{480FE3E3-5EAC-4778-94CB-43D2504A6B89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Input_GamepadUsage", "Input_GamepadUsage\Input_GamepadUsage.csproj", "{480FE3E3-5EAC-4778-94CB-43D2504A6B89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Input_MouseAndKeyboardUsage", "Input_MouseAndKeyboardUsage\Input_MouseAndKeyboardUsage.csproj", "{1BA699C8-CF24-44D4-ADDB-96D1585BF377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Input_MouseAndKeyboardUsage", "Input_MouseAndKeyboardUsage\Input_MouseAndKeyboardUsage.csproj", "{1BA699C8-CF24-44D4-ADDB-96D1585BF377}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawingAndEffects_PrerenderingTexturesForUseLater", "DrawingAndEffects_PrerenderingTexturesForUseLater\DrawingAndEffects_PrerenderingTexturesForUseLater.csproj", "{7DE277BF-0CA6-4AB9-88AC-051466AF193C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkItems_CreationAndDestruction", "FrameworkItems_CreationAndDestruction\FrameworkItems_CreationAndDestruction.csproj", "{4723BDF1-B33C-466F-AD30-C42420073ADD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -587,6 +591,30 @@ Global
 		{1BA699C8-CF24-44D4-ADDB-96D1585BF377}.Release|x64.Build.0 = Release|Any CPU
 		{1BA699C8-CF24-44D4-ADDB-96D1585BF377}.Release|x86.ActiveCfg = Release|Any CPU
 		{1BA699C8-CF24-44D4-ADDB-96D1585BF377}.Release|x86.Build.0 = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|x64.Build.0 = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DE277BF-0CA6-4AB9-88AC-051466AF193C}.Release|x86.Build.0 = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|x64.Build.0 = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Debug|x86.Build.0 = Debug|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|x64.ActiveCfg = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|x64.Build.0 = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|x86.ActiveCfg = Release|Any CPU
+		{4723BDF1-B33C-466F-AD30-C42420073ADD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

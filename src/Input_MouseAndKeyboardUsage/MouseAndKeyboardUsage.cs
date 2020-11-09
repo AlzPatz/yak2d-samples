@@ -67,7 +67,7 @@ namespace Input_MouseAndKeyboardUsage
 
         private List<Particle> _particles;
 
-        public override string ReturnWindowTitle() => "Mouse and Keyboard Usage";
+        public override string ReturnWindowTitle() => "Mouse & Keyboard: Type to Generate Letters and Left Click to Shoot Them";
 
         public override void OnStartup() 
         { 
@@ -81,6 +81,8 @@ namespace Input_MouseAndKeyboardUsage
             _drawStage = yak.Stages.CreateDrawStage();
 
             _camera = yak.Cameras.CreateCamera2D();
+
+            yak.Display.SetCursorVisible(false);
 
             return true;
         }
@@ -192,6 +194,11 @@ namespace Input_MouseAndKeyboardUsage
                 }
 
                 key.Position += key.Velocity * timeSinceLastUpdateSeconds;
+
+                if(key.Position.Y < -8000.0f)
+                {
+                    keysToRemove.Add(key);
+                }
             });
 
             keysToRemove.ForEach(toRemove => 

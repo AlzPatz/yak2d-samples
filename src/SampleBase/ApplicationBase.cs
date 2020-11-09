@@ -96,7 +96,7 @@ namespace SampleBase
 
             if (input.WasKeyReleasedThisFrame(KeyCode.Number4))
             {
-                yak.Backend.SetGraphicsApi(GraphicsApi.Metal);
+                yak.Backend.SetGraphicsApi(GraphicsApi.Vulkan);
             }
 
             return !_appClosing && Update_(yak, timeSinceLastUpdateSeconds);
