@@ -8,6 +8,8 @@ namespace CustomShader_Example
 {
     public class CustomShaderExample : ApplicationBase
     {
+        private const bool USE_SPIRV_COMPILE_TIME_SHADER = true;
+
         [StructLayout(LayoutKind.Explicit)]
         private struct UniformsCustomShader
         {
@@ -47,7 +49,7 @@ namespace CustomShader_Example
                                UniformType = ShaderUniformType.Data,
                                SizeInBytes = 32
                            }
-                       }, BlendState.Override);
+                       }, BlendState.Override, USE_SPIRV_COMPILE_TIME_SHADER);
 
             return true;
         }
