@@ -22,6 +22,7 @@ namespace GpuToCpu_SurfaceCopyRGBA
         private Vector4[] _data;
 
         private Random _rnd;
+        private Vector2 _mouseScale;
 
         public override string ReturnWindowTitle() => "Gpu to Cpu Surface Copy - RGBA";
 
@@ -46,10 +47,21 @@ namespace GpuToCpu_SurfaceCopyRGBA
 
             _camera = yak.Cameras.CreateCamera2D(960, 540);
 
+            UpdateMouseScale(yak);
+
             return true;
         }
 
-        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
+        private void UpdateMouseScale(IServices yak)
+        {
+            _mouseScale = new Vector2(960.0f / (float)yak.Display.WindowResolutionWidth, 540.0f / (float)yak.Display.WindowResolutionHeight);
+        }
+
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
+        {
+            UpdateMouseScale(yak);
+            return true;
+        }
 
         public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
 
@@ -77,6 +89,10 @@ namespace GpuToCpu_SurfaceCopyRGBA
                 //Textures share top left origin coordinate with screen position, do not use transfer
                 //Check this across backends!!
                 var mouse = input.MousePosition;
+
+                //Scale this back to 960x540 as other calcs assume it
+                mouse *= _mouseScale;
+
                 var mx = (int)mouse.X;
                 var my = (int)mouse.Y;
 
@@ -84,7 +100,7 @@ namespace GpuToCpu_SurfaceCopyRGBA
 
                 var sample = _data[linearPixel];
 
-                var mouseScreen = transform.ScreenFromWindow(mouse, _camera);
+                var mouseScreen = transform.ScreenFromWindow(input.MousePosition, _camera);
 
                 draw.DrawString(_drawStageGui,
                                 CoordinateSpace.Screen,
