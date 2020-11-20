@@ -90,7 +90,6 @@ namespace Draw_FluentInterfaceDrawingHelper
             t = t.ChangeTexture0(_textureCity).ShiftPosition(new Vector2(150.0f, 0.0f));
             draw.Draw(_drawStage, t.GenerateDrawRequest(CoordinateSpace.Screen, 0.5f, 1));
 
-
             //Using a Mirror Wrapped Texture 
             var brushCityTiledMirror = new TextureBrush(_textureCity, TextureCoordinateMode.Mirror, TextureScaling.Tiled, new Vector2(0.1f, 0.07f));
             t = helper.Construct().Textured(brushCityTiledMirror, Colour.White).Quad(new Vector2(-200.0f, -170.0f), 400.0f, 120.0f).Filled();
