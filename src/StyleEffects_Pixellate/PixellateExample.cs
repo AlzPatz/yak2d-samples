@@ -23,7 +23,7 @@ namespace StyleEffects_Pixellate
 
         public override bool CreateResources(IServices yak)
         {
-            _textureNinja = yak.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded);
+            _textureNinja = yak.Surfaces.LoadTexture("ninja", AssetSourceEnum.Embedded, ImageFormat.PNG, SamplerType.Point); //Use point sampling to avoid artifacts related to interpolation and mipmaps
 
             _viewport = yak.Stages.CreateViewport(480 - 253, 270 - 260, 506, 520);
 
