@@ -50,7 +50,7 @@ namespace GpuToCpu_SurfaceCopyFloat32
 
             _float32Texture = yak.Helpers.DistortionHelper.TextureGenerator.ConcentricSinusoidalFloat32(128, 128, 18, false, true);
 
-            var callBack = new Action<uint, TextureData>((index, data) =>
+            var callBack = new Action<TextureData>((data) =>
                {
                    GenerateMeshFromFloatData(yak.Stages, data);
                });

@@ -14,7 +14,6 @@ namespace StyleEffects_CRT
         private IStyleEffectsStage _styleEffect1;
         private IStyleEffectsStage _styleEffect2;
         private IStyleEffectsStage _styleEffect3;
-        private IColourEffectsStage _colourEffect;
 
         private IViewport _viewport0;
         private IViewport _viewport1;

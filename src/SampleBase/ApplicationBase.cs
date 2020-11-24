@@ -14,9 +14,14 @@ namespace SampleBase
 
         public virtual StartupConfig Configure()
         {
+            //Using Helper Method (equivalent to the settings below)
+            return StartupConfig.Default(960, 540, ReturnWindowTitle(), false);
+
+            /*
             return new StartupConfig
             {
                 PreferredGraphicsApi = GraphicsApi.SystemDefault,
+                AvoidVulkanWherePossible = true,
                 WindowState = DisplayState.Normal,
                 WindowPositionX = 100,
                 WindowPositionY = 100,
@@ -34,6 +39,7 @@ namespace SampleBase
                 AutoClearMainWindowColourEachFrame = false,
                 AutoClearMainWindowDepthEachFrame = false
             };
+            */
         }
 
         public void ProcessMessage(FrameworkMessage msg, IServices services)

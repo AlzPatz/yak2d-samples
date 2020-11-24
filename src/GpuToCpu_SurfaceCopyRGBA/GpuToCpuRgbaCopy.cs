@@ -35,7 +35,7 @@ namespace GpuToCpu_SurfaceCopyRGBA
         {
             _renderTarget = yak.Surfaces.CreateRenderTarget(960, 540, false);
 
-            var callBack = new Action<uint, TextureData>((index, data) =>
+            var callBack = new Action<TextureData>((data) =>
             {
                 _data = data.Pixels;
             });
