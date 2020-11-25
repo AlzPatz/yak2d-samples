@@ -100,7 +100,7 @@ namespace Window_ChangingWindowProperties
 
             if (input.WasKeyReleasedThisFrame(KeyCode.O))
             {
-                display.WindowOpacity = 0.5f;
+                display.WindowOpacity = display.WindowOpacity == 1.0f ? 0.5f : 1.0f;
             }
 
             if (input.WasKeyReleasedThisFrame(KeyCode.C))
@@ -129,6 +129,11 @@ namespace Window_ChangingWindowProperties
             if (input.WasKeyReleasedThisFrame(KeyCode.H))
             {
                 display.SetCursorVisible(false);
+            }
+
+            if (input.WasKeyReleasedThisFrame(KeyCode.S))
+            {
+                display.WindowResizable = ! display.WindowResizable;
             }
 
             if (input.WasKeyReleasedThisFrame(KeyCode.R))
@@ -190,7 +195,8 @@ namespace Window_ChangingWindowProperties
                 "Change Title Text: T",
                 "Change Opacity: O",
                 "Change to small window size: C",
-                "Toggle Window Borders",
+                "Toggle Window Borders: B",
+                "Toggle Window Resizable: S",
                 "Reset Changes: R"
             };
 

@@ -82,7 +82,7 @@ namespace Input_MouseAndKeyboardUsage
 
             _camera = yak.Cameras.CreateCamera2D();
 
-            yak.Display.SetCursorVisible(false);
+            yak.Display.SetCursorVisible(true);
 
             return true;
         }
@@ -291,12 +291,26 @@ namespace Input_MouseAndKeyboardUsage
             //value is valid across updates and draws
 
             var mousePosition = transform.ScreenFromWindow(input.MousePosition, _camera).Position;
+            DrawCrossHairs(draw, mousePosition);
 
+            draw.DrawString(_drawStage,
+                            CoordinateSpace.Screen,
+                            input.IsMouseOverWindow ? "Mouse is over window" : "Mouse is not over window",
+                            Colour.White,
+                            24,
+                            new Vector2(-460.0f, 260.0f),
+                            TextJustify.Left,
+                            0.1f,
+                            0);
+        }
+
+        private void DrawCrossHairs(IDrawing draw, Vector2 screenPosition)
+        {
             var crossHairsLength = 0.5f * (CROSS_HAIRS_SIZE - (2.0f * CROSS_HAIRS_SPACING));
             draw.Helpers.DrawColouredQuad(_drawStage,
                                           CoordinateSpace.Screen,
                                           CROSS_HAIRS_COLOUR,
-                                          mousePosition + new Vector2(0.0f, -(CROSS_HAIRS_SPACING + (0.5f * crossHairsLength))),
+                                          screenPosition + new Vector2(0.0f, -(CROSS_HAIRS_SPACING + (0.5f * crossHairsLength))),
                                           CROSS_HAIRS_WIDTH,
                                           crossHairsLength,
                                           CROSS_HAIRS_DEPTH,
@@ -304,7 +318,7 @@ namespace Input_MouseAndKeyboardUsage
             draw.Helpers.DrawColouredQuad(_drawStage,
                                           CoordinateSpace.Screen,
                                           CROSS_HAIRS_COLOUR,
-                                          mousePosition + new Vector2(0.0f, (CROSS_HAIRS_SPACING + (0.5f * crossHairsLength))),
+                                          screenPosition + new Vector2(0.0f, (CROSS_HAIRS_SPACING + (0.5f * crossHairsLength))),
                                           CROSS_HAIRS_WIDTH,
                                           crossHairsLength,
                                           CROSS_HAIRS_DEPTH,
@@ -313,7 +327,7 @@ namespace Input_MouseAndKeyboardUsage
             draw.Helpers.DrawColouredQuad(_drawStage,
                                           CoordinateSpace.Screen,
                                           CROSS_HAIRS_COLOUR,
-                                          mousePosition + new Vector2(-(CROSS_HAIRS_SPACING + (0.5f * crossHairsLength)), 0.0f),
+                                          screenPosition + new Vector2(-(CROSS_HAIRS_SPACING + (0.5f * crossHairsLength)), 0.0f),
                                           crossHairsLength,
                                           CROSS_HAIRS_WIDTH,
                                           CROSS_HAIRS_DEPTH,
@@ -321,7 +335,7 @@ namespace Input_MouseAndKeyboardUsage
             draw.Helpers.DrawColouredQuad(_drawStage,
                                           CoordinateSpace.Screen,
                                           CROSS_HAIRS_COLOUR,
-                                          mousePosition + new Vector2((CROSS_HAIRS_SPACING + (0.5f * crossHairsLength)), 0.0f),
+                                          screenPosition + new Vector2((CROSS_HAIRS_SPACING + (0.5f * crossHairsLength)), 0.0f),
                                           crossHairsLength,
                                           CROSS_HAIRS_WIDTH,
                                           CROSS_HAIRS_DEPTH,

@@ -62,7 +62,7 @@ namespace CustomVeldrid_ComputeShaderExample
         {
             _gameOfLife = new GameOfLife((int)gridWidth, (int)gridWidth, THREAD_GROUP_SIZE);
             _customVeldridStage = yak.Stages.CreateCustomVeldridStage(_gameOfLife);
-            _gameOfLifeRenderTarget = yak.Surfaces.CreateRenderTarget(gridWidth, gridHeight, true, SamplerType.Point);
+            _gameOfLifeRenderTarget = yak.Surfaces.CreateRenderTarget(gridWidth, gridHeight, true, SamplerType.PointMagLinearMin);
 
             var initZoomRequiredWidth = 960.0f / (1.0f * gridWidth);
             var initZoomRequiredHeight = 540.0f / (1.0f * gridHeight);

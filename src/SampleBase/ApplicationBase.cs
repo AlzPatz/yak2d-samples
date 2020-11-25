@@ -23,6 +23,7 @@ namespace SampleBase
                 PreferredGraphicsApi = GraphicsApi.SystemDefault,
                 AvoidVulkanWherePossible = true,
                 WindowState = DisplayState.Normal,
+                WindowIsResizable = false,
                 WindowPositionX = 100,
                 WindowPositionY = 100,
                 WindowWidth = 960,

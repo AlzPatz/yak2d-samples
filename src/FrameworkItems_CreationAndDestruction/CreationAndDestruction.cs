@@ -12,13 +12,13 @@ namespace FrameworkItems_CreationAndDestruction
     public class CreationAndDestruction : ApplicationBase
     {
         /*
-            NOTE - if you destroy a framework item during an update() cycle which is being used in a current draw() cycle
-            the asset may not be avaliable for the renderer; which will cause unexpected / erroneous behaviour or throw
-            an exception. 
-
-            Therefore, be sure you are not currently using an item when destroying it, OR destroy assets in PreDrawing or Drawing 
-            Methods, as those are NOT executed while a render is inflight
-         */
+            NOTE - When you call to destroy a framework item, it will be queued for destruction after the next render() cycle
+            This functionality is used to avoid a destruction in an update() removing an asset that is currently queued for 
+            drawing / rendering
+            
+            It is still best practice when when destroying an item to destroy assets in PreDrawing or Drawing 
+            Methods, keeping the destruction request and actual destruction close together
+        */
 
         private IDrawStage _drawStage;
         private ICamera2D _camera;
