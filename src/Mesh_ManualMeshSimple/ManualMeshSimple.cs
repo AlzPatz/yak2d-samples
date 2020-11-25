@@ -34,7 +34,7 @@ namespace Mesh_ManualMeshSimple
             yak.Stages.SetMeshRenderLightingProperties(_meshStage, new MeshRenderLightingPropertiesConfiguration
             {
                 NumberOfActiveLights = 1,
-                Shininess = 10.0f,
+                Shininess = 20.0f,
                 SpecularColour = Colour.White.ToVector3(),
             });
 

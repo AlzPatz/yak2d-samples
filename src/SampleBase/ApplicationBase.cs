@@ -15,12 +15,11 @@ namespace SampleBase
         public virtual StartupConfig Configure()
         {
             //Using Helper Method (equivalent to the settings below)
-            return StartupConfig.Default(960, 540, ReturnWindowTitle(), false);
+            //return StartupConfig.Default(960, 540, ReturnWindowTitle(), false);
 
-            /*
             return new StartupConfig
             {
-                PreferredGraphicsApi = GraphicsApi.SystemDefault,
+                PreferredGraphicsApi = GraphicsApi.Direct3D11,
                 AvoidVulkanWherePossible = true,
                 WindowState = DisplayState.Normal,
                 WindowIsResizable = false,
@@ -40,7 +39,6 @@ namespace SampleBase
                 AutoClearMainWindowColourEachFrame = false,
                 AutoClearMainWindowDepthEachFrame = false
             };
-            */
         }
 
         public void ProcessMessage(FrameworkMessage msg, IServices services)

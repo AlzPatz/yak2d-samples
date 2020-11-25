@@ -45,17 +45,20 @@ namespace GpuToCpu_SurfaceCopyFloat32
 
         public override bool CreateResources(IServices yak)
         {
+            var tWidth = 128U;
+            var tHeight = 128U;
+
             _first = true;
             _meshDataReady = false;
 
-            _float32Texture = yak.Helpers.DistortionHelper.TextureGenerator.ConcentricSinusoidalFloat32(128, 128, 18, false, true);
+            _float32Texture = yak.Helpers.DistortionHelper.TextureGenerator.ConcentricSinusoidalFloat32(tWidth, tHeight, 8, false, true);
 
             var callBack = new Action<TextureData>((data) =>
                {
                    GenerateMeshFromFloatData(yak.Stages, data);
                });
 
-            _gpuToCpuCopyStage = yak.Stages.CreateSurfaceCopyDataStage(64, 64, callBack, true);
+            _gpuToCpuCopyStage = yak.Stages.CreateSurfaceCopyDataStage(tWidth, tHeight, callBack, true);
 
             _meshStage = yak.Stages.CreateMeshRenderStage();
 
@@ -80,7 +83,7 @@ namespace GpuToCpu_SurfaceCopyFloat32
                 }
             });
 
-            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPositionStart, _cam3DLookAt, Vector3.UnitY, 60.0f, 1.777779f, 0.00001f, 10000.0f);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPositionStart, _cam3DLookAt, Vector3.UnitY, 60.0f, 1.777779f, 0.000001f, 100000.0f);
 
             _whiteTexture = yak.Surfaces.LoadTexture("oilpaint", AssetSourceEnum.Embedded);
 
