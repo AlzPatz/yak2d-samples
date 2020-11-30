@@ -13,6 +13,8 @@ namespace GpuToCpu_SurfaceCopyFloat32
     {
         private const float MESH_HEIGHT_AMPLITUDE = 256.0f;
         private const float PIXEL_SIZE_SCALAR = 10.0f;
+        private const float MOVE_SPEED = 1000.0f;
+        private const float ROTATE_SPEED = 2.5f;
 
         private ITexture _float32Texture;
         private ISurfaceCopyStage _gpuToCpuCopyStage;
@@ -20,27 +22,17 @@ namespace GpuToCpu_SurfaceCopyFloat32
         private ICamera3D _camera3D;
         private ITexture _whiteTexture;
 
-        private Vector3 _cam3DPositionStart;
-        private Vector3 _cam3DPositionEnd;
-        private Vector3 _cam3DLookAt;
-
         private bool _first;
         private bool _meshDataReady;
 
-        private const float DURATION = 5.0f;
-        private float _count = 0.0f;
+        private FlyCam _cam;
 
         public override string ReturnWindowTitle() => "Gpu to Cpu Surface Copy - Float32";
 
         public override void OnStartup()
         {
             //Framework uses a Right Handed Coordinate System in 3D (x positive to the right, y positive upwards, z positive towards camera)
-            //_cam3DPositionStart = new Vector3(0.0f, 2800.0f, 700.0f);
-            //_cam3DPositionEnd = new Vector3(0.0f, -2800.0f, 700.0f);
-            _cam3DPositionStart = new Vector3(2800.0f, 0.0f, 700.0f);
-            _cam3DPositionEnd = new Vector3(-2800.0f, 0.0f, 700.0f);
-
-            _cam3DLookAt = Vector3.Zero;
+            _cam = new FlyCam(new Vector3(0.0f, -1000.0f, 800.0f), Vector3.UnitZ, Vector3.UnitY);
         }
 
         public override bool CreateResources(IServices yak)
@@ -83,7 +75,7 @@ namespace GpuToCpu_SurfaceCopyFloat32
                 }
             });
 
-            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPositionStart, _cam3DLookAt, Vector3.UnitY, 60.0f, 1.777779f, 0.000001f, 100000.0f);
+            _camera3D = yak.Cameras.CreateCamera3D(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY, 60.0f, 1.777779f, 0.000001f, 100000.0f);
 
             _whiteTexture = yak.Surfaces.LoadTexture("oilpaint", AssetSourceEnum.Embedded);
 
@@ -210,22 +202,19 @@ namespace GpuToCpu_SurfaceCopyFloat32
             return (y * width) + x;
         }
 
-        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
+        {
+            if (yak.Input.WasKeyReleasedThisFrame(KeyCode.R))
+            {
+                _cam.Reset();
+            }
+            return true;
+        }
 
         public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            _count += timeSinceLastDrawSeconds;
-
-            while (_count > DURATION)
-            {
-                _count -= DURATION;
-            }
-
-            var fraction = 0.5f * ((float)Math.Sin((_count / DURATION) * Math.PI * 2.0f) + 1.0f);
-
-            var camDelta = _cam3DPositionEnd - _cam3DPositionStart;
-
-            yak.Cameras.SetCamera3DView(_camera3D, _cam3DPositionStart + (fraction * camDelta), _cam3DLookAt, Vector3.UnitY);
+            _cam.UpdateInputWithDefaultControls(yak.Input, MOVE_SPEED, ROTATE_SPEED, timeSinceLastDrawSeconds);
+            yak.Cameras.SetCamera3DView(_camera3D, _cam.Position, _cam.LookAt, _cam.Up);
         }
 
         public override void Drawing(IDrawing draw, IFps fps, IInput input, ICoordinateTransforms transform, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds) { }
