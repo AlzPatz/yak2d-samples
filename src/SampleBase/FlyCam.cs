@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Yak2D;
 
-namespace GpuToCpu_SurfaceCopyFloat32
+namespace SampleBase
 {
     public class FlyCam
     {

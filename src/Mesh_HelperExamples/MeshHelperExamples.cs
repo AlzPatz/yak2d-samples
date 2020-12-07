@@ -36,24 +36,18 @@ namespace Mesh_HelperExamples
 
         private ICommonMeshBuilder _meshBuilder;
 
-        private Vector2 _camPosition;
-        private float _camZoom;
-
-        private Vector3 _cam3DPosition;
-        private Vector3 _cam3DLookAt;
+        private FlyCam _cam;
 
         private float _rotationAngle = 0.0f;
+        private const float MOVE_SPEED = 1000.0f;
+        private const float ROTATE_SPEED = 2.5f;
         private const float ROTATION_SPEED = 140.0f;
 
         public override string ReturnWindowTitle() => "Mesh Example - Using Helpers";
 
         public override void OnStartup()
         {
-            _camPosition = Vector2.Zero;
-            _camZoom = 1.0f;
-
-            _cam3DPosition = new Vector3(0.0f, 0.0f, 200.0f);
-            _cam3DLookAt = Vector3.Zero;
+            _cam = new FlyCam(new Vector3(0.0f, 0.0f, 200.0f), Vector3.UnitY, Vector3.UnitZ);
         }
 
         public override bool CreateResources(IServices yak)
@@ -80,7 +74,7 @@ namespace Mesh_HelperExamples
 
             _camera2D = yak.Cameras.CreateCamera2D();
 
-            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam.Position, _cam.LookAt, _cam.Up);
 
             _meshStage_Quad = yak.Stages.CreateMeshRenderStage();
             _meshStage_CRT = yak.Stages.CreateMeshRenderStage();
@@ -160,14 +154,20 @@ namespace Mesh_HelperExamples
             return true;
         }
 
-        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
+        {
+            if (yak.Input.WasKeyReleasedThisFrame(KeyCode.R))
+            {
+                _cam.Reset();
+            }
+            return true;
+        }
 
         public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
-            yak.Cameras.SetCamera2DFocusAndZoom(_camera2D, _camPosition, _camZoom);
-
+            _cam.UpdateInputWithDefaultControls(yak.Input, MOVE_SPEED, ROTATE_SPEED, timeSinceLastDrawSeconds);
             yak.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
-            yak.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            yak.Cameras.SetCamera3DView(_camera3D, _cam.Position, _cam.LookAt, _cam.Up);
 
             _rotationAngle += ROTATION_SPEED * timeSinceLastDrawSeconds;
             while (_rotationAngle > 360)

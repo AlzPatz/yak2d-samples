@@ -214,6 +214,7 @@ namespace GpuToCpu_SurfaceCopyFloat32
         public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
             _cam.UpdateInputWithDefaultControls(yak.Input, MOVE_SPEED, ROTATE_SPEED, timeSinceLastDrawSeconds);
+            yak.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 10000.0f);
             yak.Cameras.SetCamera3DView(_camera3D, _cam.Position, _cam.LookAt, _cam.Up);
         }
 

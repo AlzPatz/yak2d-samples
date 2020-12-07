@@ -32,6 +32,8 @@ namespace Mesh_ManualChangingMesh
             }
         }
 
+        private const float MOVE_SPEED = 1000.0f;
+        private const float ROTATE_SPEED = 2.5f;
         private const float DURATION = 0.7f;
         private float _timecount = 0.0f;
 
@@ -39,8 +41,8 @@ namespace Mesh_ManualChangingMesh
         private ICamera3D _camera3D;
         private IMeshRenderStage _meshStage;
 
-        private Vector3 _cam3DPosition;
-        private Vector3 _cam3DLookAt;
+        private FlyCam _cam;
+        
         private List<QuickWave> _waves;
 
         public override string ReturnWindowTitle() => "Mesh Example - Manual Evolving Model Creation";
@@ -48,8 +50,8 @@ namespace Mesh_ManualChangingMesh
         public override void OnStartup()
         {
             //Framework uses a Right Handed Coordinate System in 3D (x positive to the right, y positive upwards, z positive towards camera)
-            _cam3DPosition = new Vector3(-80.0f, 100.0f, 230.0f);
-            _cam3DLookAt = Vector3.Zero;
+
+            _cam = new FlyCam(new Vector3(-80.0f, 100.0f, 230.0f), Vector3.UnitY, Vector3.UnitZ);
 
             _waves = new List<QuickWave>()
             {
@@ -96,7 +98,7 @@ namespace Mesh_ManualChangingMesh
         {
             _texFlag = yak.Surfaces.LoadTexture("pirate-flag", AssetSourceEnum.Embedded);
 
-            _camera3D = yak.Cameras.CreateCamera3D(_cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _camera3D = yak.Cameras.CreateCamera3D(_cam.Position, _cam.LookAt, _cam.Up);
 
             _meshStage = yak.Stages.CreateMeshRenderStage();
 
@@ -124,7 +126,14 @@ namespace Mesh_ManualChangingMesh
             return true;
         }
 
-        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds) => true;
+        public override bool Update_(IServices yak, float timeSinceLastUpdateSeconds)
+        {
+            if (yak.Input.WasKeyReleasedThisFrame(KeyCode.R))
+            {
+                _cam.Reset();
+            }
+            return true;
+        }
 
         public override void PreDrawing(IServices yak, float timeSinceLastDrawSeconds, float timeSinceLastUpdateSeconds)
         {
@@ -137,8 +146,8 @@ namespace Mesh_ManualChangingMesh
 
             var fraction = _timecount / DURATION;
 
-            yak.Cameras.SetCamera3DProjection(_camera3D, 75, 960.0f / 540.0f, 10.0f, 1000.0f);
-            yak.Cameras.SetCamera3DView(_camera3D, _cam3DPosition, _cam3DLookAt, Vector3.UnitY);
+            _cam.UpdateInputWithDefaultControls(yak.Input, MOVE_SPEED, ROTATE_SPEED, timeSinceLastDrawSeconds);
+            yak.Cameras.SetCamera3DView(_camera3D, _cam.Position, _cam.LookAt, _cam.Up);
 
             var mesh = BuildFlagMesh(fraction);
 
