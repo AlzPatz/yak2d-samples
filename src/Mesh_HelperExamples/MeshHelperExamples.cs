@@ -47,6 +47,7 @@ namespace Mesh_HelperExamples
 
         public override void OnStartup()
         {
+            //Framework uses a Right Handed Coordinate System in 3D (x positive to the right, y positive upwards, z positive towards camera)
             _cam = new FlyCam(new Vector3(0.0f, 0.0f, 200.0f), Vector3.UnitY, Vector3.UnitZ);
         }
 

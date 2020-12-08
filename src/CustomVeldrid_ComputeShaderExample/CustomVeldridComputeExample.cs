@@ -12,8 +12,8 @@ namespace CustomVeldrid_ComputeShaderExample
     {
         private const int THREAD_GROUP_SIZE = 16;
 
-        private const uint GRID_WIDTH = 128;  //Multiple of Threadgroup Size
-        private const uint GRID_HEIGHT = 128; //Multiple of Threadgroup Size
+        private const uint GRID_WIDTH = 64;  //Multiple of Threadgroup Size
+        private const uint GRID_HEIGHT = 64; //Multiple of Threadgroup Size
 
         private const float FRAC_SCREEN_WIDTH_ON_MOVE = 0.1f;
 

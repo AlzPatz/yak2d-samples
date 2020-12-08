@@ -38,6 +38,12 @@ namespace CustomVeldrid_ComputeShaderExample
             public int Pad4;
         };
 
+        private struct Vertex
+        {
+            public Vector2 Position;
+            public Vector2 TexCoord;
+        }
+
         private int frameCount = 0;
 
         private int _width;
@@ -237,6 +243,8 @@ namespace CustomVeldrid_ComputeShaderExample
 
         private void InitResources(GraphicsDevice device, DisposeCollectorResourceFactory factory)
         {
+            var vulkan = device.BackendType == GraphicsBackend.Vulkan;
+
             var cl = factory.CreateCommandList();
 
             cl.Begin();
@@ -251,12 +259,28 @@ namespace CustomVeldrid_ComputeShaderExample
 
             cl.UpdateBuffer(_gridSizeBuffer, 0, gridSize);
 
-            Vector4[] quadVerts =
-{
-                new Vector4(-1, 1, 0, 0),
-                new Vector4(1, 1, 1, 0),
-                new Vector4(1, -1, 1, 1),
-                new Vector4(-1, -1, 0, 1),
+            Vertex[] quadVerts =
+            {
+                new Vertex
+                {
+                    Position = new Vector2(-1, vulkan ? -1: 1),
+                    TexCoord = new Vector2(0,0)
+                },
+                new Vertex
+                {
+                    Position = new Vector2(1, vulkan ? -1 : 1),
+                    TexCoord = new Vector2(1,0)
+                },
+                new Vertex
+                {
+                    Position = new Vector2(1, vulkan ? 1 : -1),
+                    TexCoord = new Vector2(1,1)
+                },
+                new Vertex
+                {
+                    Position = new Vector2(-1, vulkan ? 1 : -1),
+                    TexCoord = new Vector2(0,1)
+                }
             };
 
             ushort[] indices = { 0, 1, 2, 0, 2, 3 };
@@ -280,18 +304,20 @@ namespace CustomVeldrid_ComputeShaderExample
             {
                 //Pull Byte Data from Staging Texture
 
-                var data = new byte[_width * _height];
-
                 MappedResourceView<byte> mapRead = device.Map<byte>(_stagingTexture, MapMode.Read);
 
-                Marshal.Copy(mapRead.MappedResource.Data, data, 0, _width * _height);
+                var dataRowStride = mapRead.MappedResource.RowPitch;
+
+                var data = new byte[dataRowStride * _height];
+
+                Marshal.Copy(mapRead.MappedResource.Data, data, 0, (int)dataRowStride * _height);
 
                 device.Unmap(_stagingTexture);
 
                 // Modify Data
                 PointsToAdd.ForEach(p =>
                 {
-                    var index = (p.Y * _width) + p.X;
+                    var index = (p.Y * dataRowStride) + p.X;
                     data[index] = (byte)1;
                 });
 
@@ -299,7 +325,7 @@ namespace CustomVeldrid_ComputeShaderExample
 
                 PointsToRemove.ForEach(p =>
                 {
-                    var index = (p.Y * _width) + p.X;
+                    var index = (p.Y * dataRowStride) + p.X;
                     data[index] = (byte)0;
                 });
 
@@ -308,14 +334,14 @@ namespace CustomVeldrid_ComputeShaderExample
                 if(ClearFlag)
                 {
                     ClearFlag = false;
-                    data = Enumerable.Repeat((byte)0, _width * _height).ToArray();
+                    data = Enumerable.Repeat((byte)0, (int)dataRowStride * _height).ToArray();
                 }
 
                 //Push Updated Data back to Staging Texture
 
                 MappedResourceView<byte> mapped = device.Map<byte>(_stagingTexture, MapMode.Write);
 
-                Marshal.Copy(data, 0, mapped.MappedResource.Data, _width * _height);
+                Marshal.Copy(data, 0, mapped.MappedResource.Data, (int)dataRowStride * _height);
 
                 device.Unmap(_stagingTexture);
                 cl.CopyTexture(_stagingTexture, _conwayTextures[step]);
