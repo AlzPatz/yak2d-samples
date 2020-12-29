@@ -16,10 +16,10 @@ namespace SampleBase
         {
             //Using Helper Method (equivalent to the settings below)
             //return StartupConfig.Default(960, 540, ReturnWindowTitle(), false);
-
+            
             return new StartupConfig
             {
-                PreferredGraphicsApi = GraphicsApi.Direct3D11,
+                PreferredGraphicsApi = GraphicsApi.SystemDefault,
                 AvoidVulkanWherePossible = true,
                 WindowState = DisplayState.Normal,
                 WindowIsResizable = false,

@@ -4,14 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-<!--
-  <ItemGroup>
-    <PackageReference Include="Yak2D" Version="0.0.5" />
+  <!-- Conditionally link to local Yak2D source if it is present within the same directory -->
+  <ItemGroup Condition="Exists('..\..\..\yak2d\')">
+    <ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj"/>
   </ItemGroup>
--->
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj" />
+
+  <!-- If Yak2d source not present, use nuget (default likely for users) -->
+  <ItemGroup Condition="!Exists('..\..\..\yak2d\')">
+    <PackageReference Include="Yak2D" Version="0.0.6" />
   </ItemGroup>
 
 </Project>
