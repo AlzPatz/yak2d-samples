@@ -14,7 +14,7 @@ yak2D is built upon the Veldrid cross-platform API agnostic rendering library fo
 
 ## Example Screenshots
 
-Each sample projection aims to demonstrate the simple application of a drawing or rendering function.
+Each sample project aims to demonstrate the simple application of a drawing or rendering function.
 
 Please note the GIFs are of a lower resolution and lower framerate than is actually rendered by Yak2D 
 
