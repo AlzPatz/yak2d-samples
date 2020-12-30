@@ -111,7 +111,7 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ### GPU to CPU copy - RGBA
 
-![](gifs/surfacecopyfloatrgba.PNG)
+![](gifs/surfacecopyrgba.PNG)
 
 ### Coordinate Transforms (Window, Screen, World) - Helper Functions
 
