@@ -37,7 +37,7 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ![](gifs/customshader.gif)
 
-![](gifs/customshader.PNG)
+![](gifs/customshader.png)
 
 ### CustomVeldrid
 
@@ -55,4 +55,4 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ![](gifs/distortionmanual.gif)
 
-![](gifs/distortionmanual.PNG)
+![](gifs/disortionmanual.PNG)
