@@ -10,7 +10,7 @@ yak2D is built upon the Veldrid cross-platform API agnostic rendering library fo
 
 ## Documentation
 
-[yak2D documentation](https://alzpatz.github.io/yak2d-docs/)
+See [yak2D documentation](https://alzpatz.github.io/yak2d-docs/) for information on yak2D's structure and usage.
 
 ## Example Screenshots
 
