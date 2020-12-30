@@ -15,7 +15,7 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ![](gifs/bloom.gif)
 
-<img src="gifs/bloom.PNG">
+![](gifs/bloom.PNG)
 
 ### Blur
 
