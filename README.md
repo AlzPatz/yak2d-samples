@@ -21,6 +21,38 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ![](gifs/blur.gif)
 
-### Blur
+![](gifs/blur.PNG)
 
-![](gifs/blur.gif)
+### ColourEffects
+
+![](gifs/coloureffects.gif)
+
+![](gifs/coloureffects.PNG)
+
+### CopyExample
+
+![](gifs/copy.PNG)
+
+### CustomShader
+
+![](gifs/customshader.gif)
+
+![](gifs/customshader.PNG)
+
+### CustomVeldrid
+
+![](gifs/customveldrid.gif)
+
+![](gifs/customveldrid.PNG)
+
+### Distortion using Helpers
+
+![](gifs/distortionhelpers.gif)
+
+![](gifs/distortionhelpers.PNG)
+
+### Distortion using Manual Texture Creation
+
+![](gifs/distortionmanual.gif)
+
+![](gifs/distortionmanual.PNG)
