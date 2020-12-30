@@ -9,7 +9,7 @@ It offers easy to use 2d polgon and 'sprite' drawing functions, in addition to f
 yak2D is built upon the Veldrid cross-platform API agnostic rendering library for .NET, along with the SDL2 via the [Veldrid](https://github.com/mellinoe/veldrid) Library.
 
 ## Example Screenshots
-Please note the GIFs are naturally lower resolution and lower framework than is actually rendered by Yak2D :) However, they hopefully give you a taste of what to expect! 
+Please note the GIFs are naturally lower resolution and lower framework than is actually rendered by Yak2D 
 
 ### Bloom
 
