@@ -56,3 +56,135 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 ![](gifs/distortionmanual.gif)
 
 ![](gifs/disortionmanual.PNG)
+
+### Draw Basic Polygons with Helper Functions
+
+![](gifs/basicpolygons.png)
+
+### Camera2D, World and Screen space Rendering
+
+![](gifs/camera2dworld.gif)
+
+![](gifs/camera2dworld.PNG)
+
+### Fluent Interface Drawing
+
+![](gifs/fluent.PNG)
+
+### Draw Fonts
+
+![](gifs/fonts.PNG)
+
+### Image File Formats
+
+![](gifs/fileformats.PNG)
+
+### Persistent Queue Drawing
+
+![](gifs/persistent.gif)
+
+![](gifs/persistent.PNG)
+
+### Drawing Custom Polygons from Vertices
+
+![](gifs/polysfromverts.PNG)
+
+### Splitscreen Drawing
+
+![](gifs/splitscreen.gif)
+
+![](gifs/splitscreen.PNG)
+
+### Prerender Textures for later use
+
+![](gifs/prerender.gif)
+
+![](gifs/prerender.PNG)
+
+### Framework items Creation and Destruction
+
+![](gifs/createdestroy.PNG)
+
+### GPU to CPU copy - Float32 Texture
+
+![](gifs/surfacecopyfloat32.PNG)
+
+### GPU to CPU copy - RGBA
+
+![](gifs/surfacecopyfloatrgba.PNG)
+
+### Coordinate Transforms (Window, Screen, World) - Helper Functions
+
+![](gifs/transformcoordinates.PNG)
+
+### Gamepad Input
+
+![](gifs/inputgamepad.PNG)
+
+### Mouse and Keyboard Input
+
+![](gifs/inputmousekeyboard.gif)
+
+![](gifs/inputkeyboardmouse.PNG)
+
+### 3D Mesh - Helper Functions
+
+![](gifs/meshhelper.gif)
+
+![](gifs/meshhelper.PNG)
+
+### 3D Mesh - Manual, Changing Mesh
+
+![](gifs/meshmanual.gif)
+
+![](gifs/meshmanual.PNG)
+
+### 3D Mesh - Manual, Simple Static Mesh
+
+![](gifs/meshsimple.PNG)
+
+### Mixing - Whole Texture
+
+![](gifs/mixwhole.gif)
+
+### Mixing - Per Pixel
+
+![](gifs/mixperpixel.gif)
+
+![](gifs/mixperpixel.PNG)
+
+### CRT Screen Effects
+
+![](gifs/crt.PNG)
+
+### Edge Detection
+
+![](gifs/edgedetection.PNG)
+
+### Old Movie Effect
+
+![](gifs/oldmovie.gif)
+
+![](gifs/oldmovie.PNG)
+
+### Pixellate
+
+![](gifs/pixellate.PNG)
+
+### Static
+
+![](gifs/static.gif)
+
+![](gifs/static.PNG)
+
+### Style Effects (CRT, Old Movie, Pixellate, Static) - Configuration Helpers
+
+![](gifs/styleconfig.gif)
+
+### Create Texture from data RGBA
+
+![](gifs/createtexturergba.PNG)
+
+### Changing Window Properties
+
+![](gifs/window.PNG)
