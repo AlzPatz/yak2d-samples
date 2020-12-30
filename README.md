@@ -59,7 +59,7 @@ Please note the GIFs are of a lower resolution and lower framerate than is actua
 
 ### Draw Basic Polygons with Helper Functions
 
-![](gifs/basicpolygons.png)
+![](gifs/basicpolygons.PNG)
 
 ### Camera2D, World and Screen space Rendering
 
