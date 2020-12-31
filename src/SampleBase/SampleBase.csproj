@@ -11,7 +11,7 @@
 
   <!-- If Yak2d source not present, use nuget (default likely for users) -->
   <ItemGroup Condition="!Exists('..\..\..\yak2d\')">
-    <PackageReference Include="Yak2D" Version="0.0.6" />
+    <PackageReference Include="Yak2D" Version="0.0.81" />
   </ItemGroup>
 
 </Project>

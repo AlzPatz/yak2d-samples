@@ -16,182 +16,182 @@ See [yak2D documentation](https://alzpatz.github.io/yak2d-docs/) for information
 
 Each sample project aims to demonstrate the simple application of a drawing or rendering function.
 
-Please note the GIFs are of a lower resolution and lower framerate than is actually rendered by Yak2D 
+Please note the images are of a lower resolution and lower framerate than is actually rendered by Yak2D 
 
 ### Bloom
 
-![](gifs/bloom.gif)
+![](images/bloom.gif)
 
-![](gifs/bloom.PNG)
+![](images/bloom.PNG)
 
 ### Blur
 
-![](gifs/blur.gif)
+![](images/blur.gif)
 
-![](gifs/blur.PNG)
+![](images/blur.PNG)
 
 ### ColourEffects
 
-![](gifs/coloureffects.gif)
+![](images/coloureffects.gif)
 
-![](gifs/coloureffects.PNG)
+![](images/coloureffects.PNG)
 
 ### CopyExample
 
-![](gifs/copy.PNG)
+![](images/copy.PNG)
 
 ### CustomShader
 
-![](gifs/customshader.gif)
+![](images/customshader.gif)
 
-![](gifs/customshader.png)
+![](images/customshader.png)
 
 ### CustomVeldrid
 
-![](gifs/customveldrid.gif)
+![](images/customveldrid.gif)
 
-![](gifs/customveldrid.PNG)
+![](images/customveldrid.PNG)
 
 ### Distortion using Helpers
 
-![](gifs/distortionhelpers.gif)
+![](images/distortionhelpers.gif)
 
-![](gifs/distortionhelpers.PNG)
+![](images/distortionhelpers.PNG)
 
 ### Distortion using Manual Texture Creation
 
-![](gifs/distortionmanual.gif)
+![](images/distortionmanual.gif)
 
-![](gifs/disortionmanual.PNG)
+![](images/disortionmanual.PNG)
 
 ### Draw Basic Polygons with Helper Functions
 
-![](gifs/basicpolygons.PNG)
+![](images/basicpolygons.PNG)
 
 ### Camera2D, World and Screen space Rendering
 
-![](gifs/camera2dworld.gif)
+![](images/camera2dworld.gif)
 
-![](gifs/camera2dworld.PNG)
+![](images/camera2dworld.PNG)
 
 ### Fluent Interface Drawing
 
-![](gifs/fluent.PNG)
+![](images/fluent.PNG)
 
 ### Draw Fonts
 
-![](gifs/fonts.PNG)
+![](images/fonts.PNG)
 
 ### Image File Formats
 
-![](gifs/fileformats.PNG)
+![](images/fileformats.PNG)
 
 ### Persistent Queue Drawing
 
-![](gifs/persistent.gif)
+![](images/persistent.gif)
 
-![](gifs/persistent.PNG)
+![](images/persistent.PNG)
 
 ### Drawing Custom Polygons from Vertices
 
-![](gifs/polysfromverts.PNG)
+![](images/polysfromverts.PNG)
 
 ### Splitscreen Drawing
 
-![](gifs/splitscreen.gif)
+![](images/splitscreen.gif)
 
-![](gifs/splitscreen.PNG)
+![](images/splitscreen.PNG)
 
 ### Prerender Textures for later use
 
-![](gifs/prerender.gif)
+![](images/prerender.gif)
 
-![](gifs/prerender.PNG)
+![](images/prerender.PNG)
 
 ### Framework items Creation and Destruction
 
-![](gifs/createdestroy.PNG)
+![](images/createdestroy.PNG)
 
 ### GPU to CPU copy - Float32 Texture
 
-![](gifs/surfacecopyfloat32.PNG)
+![](images/surfacecopyfloat32.PNG)
 
 ### GPU to CPU copy - RGBA
 
-![](gifs/surfacecopyrgba.PNG)
+![](images/surfacecopyrgba.PNG)
 
 ### Coordinate Transforms (Window, Screen, World) - Helper Functions
 
-![](gifs/transformcoordinates.PNG)
+![](images/transformcoordinates.PNG)
 
 ### Gamepad Input
 
-![](gifs/inputgamepad.PNG)
+![](images/inputgamepad.PNG)
 
 ### Mouse and Keyboard Input
 
-![](gifs/inputmousekeyboard.gif)
+![](images/inputmousekeyboard.gif)
 
-![](gifs/inputkeyboardmouse.PNG)
+![](images/inputkeyboardmouse.PNG)
 
 ### 3D Mesh - Helper Functions
 
-![](gifs/meshhelper.gif)
+![](images/meshhelper.gif)
 
-![](gifs/meshhelper.PNG)
+![](images/meshhelper.PNG)
 
 ### 3D Mesh - Manual, Changing Mesh
 
-![](gifs/meshmanual.gif)
+![](images/meshmanual.gif)
 
-![](gifs/meshmanual.PNG)
+![](images/meshmanual.PNG)
 
 ### 3D Mesh - Manual, Simple Static Mesh
 
-![](gifs/meshsimple.PNG)
+![](images/meshsimple.PNG)
 
 ### Mixing - Whole Texture
 
-![](gifs/mixwhole.gif)
+![](images/mixwhole.gif)
 
 ### Mixing - Per Pixel
 
-![](gifs/mixperpixel.gif)
+![](images/mixperpixel.gif)
 
-![](gifs/mixperpixel.PNG)
+![](images/mixperpixel.PNG)
 
 ### CRT Screen Effects
 
-![](gifs/crt.PNG)
+![](images/crt.PNG)
 
 ### Edge Detection
 
-![](gifs/edgedetection.PNG)
+![](images/edgedetection.PNG)
 
 ### Old Movie Effect
 
-![](gifs/oldmovie.gif)
+![](images/oldmovie.gif)
 
-![](gifs/oldmovie.PNG)
+![](images/oldmovie.PNG)
 
 ### Pixellate
 
-![](gifs/pixellate.PNG)
+![](images/pixellate.PNG)
 
 ### Static
 
-![](gifs/static.gif)
+![](images/static.gif)
 
-![](gifs/static.PNG)
+![](images/static.PNG)
 
 ### Style Effects (CRT, Old Movie, Pixellate, Static) - Configuration Helpers
 
-![](gifs/styleconfig.gif)
+![](images/styleconfig.gif)
 
 ### Create Texture from data RGBA
 
-![](gifs/createtexturergba.PNG)
+![](images/createtexturergba.PNG)
 
 ### Changing Window Properties
 
-![](gifs/window.PNG)
+![](images/window.PNG)
