@@ -184,7 +184,7 @@ Please note the images are of a lower resolution and lower framerate than is act
 
 ![](images/static.PNG)
 
-### Style Effects (CRT, Old Movie, Pixellate, Static) - Configuration Helpers
+### Style Effects (Pixellate, Edge Detection, CRT, Old Movie) - Configuration Helpers
 
 ![](images/styleconfig.gif)
 
