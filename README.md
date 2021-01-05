@@ -8,6 +8,8 @@ It offers easy to use 2d polgon and 'sprite' drawing functions, in addition to f
 
 yak2D is built upon the Veldrid cross-platform API agnostic rendering library for .NET, along with the SDL2 via the [Veldrid](https://github.com/mellinoe/veldrid) Library.
 
+![](images/logo.png) 
+
 ## Documentation
 
 See [yak2D documentation](https://alzpatz.github.io/yak2d-docs/) for information on yak2D's structure and usage.
