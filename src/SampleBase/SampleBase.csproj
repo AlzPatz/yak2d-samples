@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <!-- Conditionally link to local Yak2D source if it is present within the same directory -->
   <ItemGroup Condition="Exists('..\..\..\yak2d\')">
-    <ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj"/>
+    <ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj" />
   </ItemGroup>
 
   <!-- If Yak2d source not present, use nuget (default likely for users) -->
   <ItemGroup Condition="!Exists('..\..\..\yak2d\')">
     <PackageReference Include="Yak2D" Version="0.0.81" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 
 </Project>

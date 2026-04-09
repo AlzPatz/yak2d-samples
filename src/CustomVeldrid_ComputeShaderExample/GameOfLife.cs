@@ -1,7 +1,5 @@
-﻿using Veldrid;
-using Veldrid.Sdl2;
-using Veldrid.Utilities;
-using Veldrid.SPIRV;
+﻿using NeoVeldrid;
+using NeoVeldrid.SPIRV;
 using Yak2D;
 using System;
 using System.IO;
@@ -90,7 +88,7 @@ namespace CustomVeldrid_ComputeShaderExample
             NumberFramesToWaitForUpdate = INIT_NUM_FRAMES_TO_WAIT_FOR_UPDATE;
         }
 
-        public override void Initialise(GraphicsDevice device, Sdl2Window window, DisposeCollectorResourceFactory factory)
+        public override void Initialise(GraphicsDevice device, NeoVeldrid.Sdl2.Sdl2Window window, NeoVeldrid.Utilities.DisposeCollectorResourceFactory factory)
         {
             var shaderBytes = ReadEmbeddedAssetBytes("Shaders/conway.glsl");
 
@@ -241,7 +239,7 @@ namespace CustomVeldrid_ComputeShaderExample
 
         public static Stream OpenEmbeddedAssetStream(string name, Type t) => t.Assembly.GetManifestResourceStream(name);
 
-        private void InitResources(GraphicsDevice device, DisposeCollectorResourceFactory factory)
+        private void InitResources(GraphicsDevice device, NeoVeldrid.Utilities.DisposeCollectorResourceFactory factory)
         {
             var vulkan = device.BackendType == GraphicsBackend.Vulkan;
 

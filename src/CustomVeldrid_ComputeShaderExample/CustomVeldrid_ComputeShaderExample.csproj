@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-	<TargetFramework>net9.0</TargetFramework>
-  </PropertyGroup>
+<PropertyGroup>
+	<OutputType>Exe</OutputType>
+	<TargetFramework>net10.0</TargetFramework>
+</PropertyGroup>
+<!-- Conditionally link to local Veldrid spirv source if it is present within the same directory -->
+<ItemGroup Condition="!Exists('..\..\..\veldrid-spirv\')">
+	<PackageReference Include="NeoVeldrid" Version="1.0.0-rc.1" />
+	<PackageReference Include="NeoVeldrid.Sdl2" Version="1.0.0-rc.1" />
+	<PackageReference Include="NeoVeldrid.SPIRV" Version="1.0.0-rc.1" />
+	<PackageReference Include="NeoVeldrid.Utilities" Version="1.0.0-rc.1" />
+</ItemGroup>
+<!-- If veldrid source not present, use nuget -->
+<ItemGroup Condition="Exists('..\..\..\veldrid-spirv\')">
+	<ProjectReference Include="..\..\..\veldrid-spirv\src\Veldrid.SPIRV\Veldrid.SPIRV.csproj" />
+</ItemGroup>
 
-  <!-- Conditionally link to local Veldrid spirv source if it is present within the same directory -->
-  <ItemGroup Condition="!Exists('..\..\..\veldrid-spirv\')">
-    <PackageReference Include="Veldrid.SPIRV" Version="1.0.15" />
-  </ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="..\SampleBase\SampleBase.csproj" />
+</ItemGroup>
 
-  <!-- If veldrid source not present, use nuget -->
-  <ItemGroup Condition="Exists('..\..\..\veldrid-spirv\')">
-    <ProjectReference Include="..\..\..\veldrid-spirv\src\Veldrid.SPIRV\Veldrid.SPIRV.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SampleBase\SampleBase.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Shaders\**" />
-  </ItemGroup>
-
+<ItemGroup>
+  <EmbeddedResource Include="Shaders\**" />
+</ItemGroup>
 </Project>

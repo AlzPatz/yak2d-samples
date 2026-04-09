@@ -171,12 +171,12 @@ namespace CustomVeldrid_ComputeShaderExample
                     {
                         if (yak.Input.IsMouseCurrentlyPressed(MouseButton.Left))
                         {
-                            _gameOfLife.PointsToAdd.Add(new Veldrid.Point(ix, iy));
+                            _gameOfLife.PointsToAdd.Add(new NeoVeldrid.Point(ix, iy));
                         }
 
                         if (yak.Input.IsMouseCurrentlyPressed(MouseButton.Right))
                         {
-                            _gameOfLife.PointsToRemove.Add(new Veldrid.Point(ix, iy));
+                            _gameOfLife.PointsToRemove.Add(new NeoVeldrid.Point(ix, iy));
                         }
                     }
 
