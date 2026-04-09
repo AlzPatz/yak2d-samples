@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Bloom_Example\Bloom_Example.csproj" />
+		<ProjectReference Include="..\Blur_Example\Blur_Example.csproj" />
+		<ProjectReference Include="..\ColourEffects_Example\ColourEffects_Example.csproj" />
+		<ProjectReference Include="..\Copy_Example\Copy_Example.csproj" />
+		<ProjectReference Include="..\CustomShader_Example\CustomShader_Example.csproj" />
+		<ProjectReference Include="..\CustomVeldrid_ComputeShaderExample\CustomVeldrid_ComputeShaderExample.csproj" />
+		<ProjectReference Include="..\Distortion_ExampleUsingHelperFunctions\Distortion_ExampleUsingHelperFunctions.csproj" />
+		<ProjectReference Include="..\Distortion_ManualTextureCreation\Distortion_ManualTextureCreation.csproj" />
+		<ProjectReference Include="..\DrawingAndEffects_PrerenderingTexturesForUseLater\DrawingAndEffects_PrerenderingTexturesForUseLater.csproj" />
+		<ProjectReference Include="..\Draw_BasicPolygonHelperFunctions\Draw_BasicPolygonHelperFunctions.csproj" />
+		<ProjectReference Include="..\Draw_Camera2DWorldAndScreen\Draw_Camera2DWorldAndScreen.csproj" />
+		<ProjectReference Include="..\Draw_FluentInterfaceDrawingHelper\Draw_FluentInterfaceDrawingHelper.csproj" />
+		<ProjectReference Include="..\Draw_FontExample\Draw_FontExample.csproj" />
+		<ProjectReference Include="..\Draw_ImageFileFormats\Draw_ImageFileFormats.csproj" />
+		<ProjectReference Include="..\Draw_PersistentDrawQueue\Draw_PersistentDrawQueue.csproj" />
+		<ProjectReference Include="..\Draw_PolygonsFromVertices\Draw_PolygonsFromVertices.csproj" />
+		<ProjectReference Include="..\Draw_SplitScreenExample\Draw_SplitScreenExample.csproj" />
+		<ProjectReference Include="..\FrameworkItems_CreationAndDestruction\FrameworkItems_CreationAndDestruction.csproj" />
+		<ProjectReference Include="..\GpuToCpu_SurfaceCopyFloat32\GpuToCpu_SurfaceCopyFloat32.csproj" />
+		<ProjectReference Include="..\GpuToCpu_SurfaceCopyRGBA\GpuToCpu_SurfaceCopyRGBA.csproj" />
+		<ProjectReference Include="..\Helper_CoordinateTranforms\Helper_CoordinateTranforms.csproj" />
+		<ProjectReference Include="..\Input_GamepadUsage\Input_GamepadUsage.csproj" />
+		<ProjectReference Include="..\Input_MouseAndKeyboardUsage\Input_MouseAndKeyboardUsage.csproj" />
+		<ProjectReference Include="..\Mesh_HelperExamples\Mesh_HelperExamples.csproj" />
+		<ProjectReference Include="..\Mesh_ManualChangingMesh\Mesh_ManualChangingMesh.csproj" />
+		<ProjectReference Include="..\Mesh_ManualMeshSimple\Mesh_ManualMeshSimple.csproj" />
+		<ProjectReference Include="..\Mix_SimpleWholeTextureMixingWithFactors\Mix_SimpleWholeTextureMixingWithFactors.csproj" />
+		<ProjectReference Include="..\Mix_UsingATextureForPerPixelMixing\Mix_UsingATextureForPerPixelMixing.csproj" />
+		<ProjectReference Include="..\SampleBase\SampleBase.csproj" />
+		<ProjectReference Include="..\StyleEffects_CRT\StyleEffects_CRT.csproj" />
+		<ProjectReference Include="..\StyleEffects_EdgeDetection\StyleEffects_EdgeDetection.csproj" />
+		<ProjectReference Include="..\StyleEffects_OldMovie\StyleEffects_OldMovie.csproj" />
+		<ProjectReference Include="..\StyleEffects_Pixellate\StyleEffects_Pixellate.csproj" />
+		<ProjectReference Include="..\StyleEffects_Static\StyleEffects_Static.csproj" />
+		<ProjectReference Include="..\StyleEffects_UsingConfigurationHelpers\StyleEffects_UsingConfigurationHelpers.csproj" />
+		<ProjectReference Include="..\Surfaces_CreateTextureFromDataRGBA\Surfaces_CreateTextureFromDataRGBA.csproj" />
+		<ProjectReference Include="..\Window_ChangingWindowProperties\Window_ChangingWindowProperties.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Textures\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Fonts\snappy_38.fnt" />
+	  <EmbeddedResource Include="Fonts\snappy_38_0.png" />
+	  <EmbeddedResource Include="Fonts\snappy_38_1.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64.fnt" />
+	  <EmbeddedResource Include="Fonts\snappy_64_0.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_1.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_2.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_3.png" />
+	  <EmbeddedResource Include="Shaders\conway.glsl" />
+	  <EmbeddedResource Include="Shaders\CustomBinaryFragment.glsl" />
+	  <EmbeddedResource Include="Shaders\Direct3D\compile.bat" />
+	  <EmbeddedResource Include="Shaders\Direct3D\CustomBinaryFragment.hlsl" />
+	  <EmbeddedResource Include="Shaders\Direct3D\CustomBinaryFragment.hlsl.bytes" />
+	  <EmbeddedResource Include="Shaders\fragment.glsl" />
+	  <EmbeddedResource Include="Shaders\Metal\compile.sh" />
+	  <EmbeddedResource Include="Shaders\Metal\CustomBinaryFragment.metal" />
+	  <EmbeddedResource Include="Shaders\Metal\CustomBinaryFragment.metallib" />
+	  <EmbeddedResource Include="Shaders\OpenGL\CustomBinaryFragment.glsl" />
+	  <EmbeddedResource Include="Shaders\OpenGL\CustomCopyFragment.glsl" />
+	  <EmbeddedResource Include="Shaders\vertex.glsl" />
+	  <EmbeddedResource Include="Shaders\Vulkan\compile.bat" />
+	  <EmbeddedResource Include="Shaders\Vulkan\compile.sh" />
+	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.frag" />
+	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.glsl" />
+	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.spv" />
+	</ItemGroup>
+
+</Project>
