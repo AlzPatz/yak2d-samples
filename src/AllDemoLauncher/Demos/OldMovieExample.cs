@@ -1,5 +1,4 @@
-﻿using SampleBase;
-using System.Numerics;
+﻿using System.Numerics;
 using Yak2D;
 
 namespace Demo

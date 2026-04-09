@@ -1,5 +1,4 @@
-﻿using SampleBase;
-using System;
+﻿using System;
 using Yak2D;
 
 namespace Demo

@@ -7,44 +7,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<!-- Conditionally link to local Yak2D source if it is present within the same directory -->
+	<ItemGroup Condition="Exists('..\..\..\yak2d\')">
+		<ProjectReference Include="..\..\..\yak2d\src\Yak2D\Yak2D.csproj" />
+	</ItemGroup>
+
+	<!-- If Yak2d source not present, use nuget (default likely for users) -->
+	<ItemGroup Condition="!Exists('..\..\..\yak2d\')">
+		<PackageReference Include="Yak2D" Version="0.0.81" />
+	</ItemGroup>
+	
 	<ItemGroup>
-		<ProjectReference Include="..\Bloom_Example\Bloom_Example.csproj" />
-		<ProjectReference Include="..\Blur_Example\Blur_Example.csproj" />
-		<ProjectReference Include="..\ColourEffects_Example\ColourEffects_Example.csproj" />
-		<ProjectReference Include="..\Copy_Example\Copy_Example.csproj" />
-		<ProjectReference Include="..\CustomShader_Example\CustomShader_Example.csproj" />
-		<ProjectReference Include="..\CustomVeldrid_ComputeShaderExample\CustomVeldrid_ComputeShaderExample.csproj" />
-		<ProjectReference Include="..\Distortion_ExampleUsingHelperFunctions\Distortion_ExampleUsingHelperFunctions.csproj" />
-		<ProjectReference Include="..\Distortion_ManualTextureCreation\Distortion_ManualTextureCreation.csproj" />
-		<ProjectReference Include="..\DrawingAndEffects_PrerenderingTexturesForUseLater\DrawingAndEffects_PrerenderingTexturesForUseLater.csproj" />
-		<ProjectReference Include="..\Draw_BasicPolygonHelperFunctions\Draw_BasicPolygonHelperFunctions.csproj" />
-		<ProjectReference Include="..\Draw_Camera2DWorldAndScreen\Draw_Camera2DWorldAndScreen.csproj" />
-		<ProjectReference Include="..\Draw_FluentInterfaceDrawingHelper\Draw_FluentInterfaceDrawingHelper.csproj" />
-		<ProjectReference Include="..\Draw_FontExample\Draw_FontExample.csproj" />
-		<ProjectReference Include="..\Draw_ImageFileFormats\Draw_ImageFileFormats.csproj" />
-		<ProjectReference Include="..\Draw_PersistentDrawQueue\Draw_PersistentDrawQueue.csproj" />
-		<ProjectReference Include="..\Draw_PolygonsFromVertices\Draw_PolygonsFromVertices.csproj" />
-		<ProjectReference Include="..\Draw_SplitScreenExample\Draw_SplitScreenExample.csproj" />
-		<ProjectReference Include="..\FrameworkItems_CreationAndDestruction\FrameworkItems_CreationAndDestruction.csproj" />
-		<ProjectReference Include="..\GpuToCpu_SurfaceCopyFloat32\GpuToCpu_SurfaceCopyFloat32.csproj" />
-		<ProjectReference Include="..\GpuToCpu_SurfaceCopyRGBA\GpuToCpu_SurfaceCopyRGBA.csproj" />
-		<ProjectReference Include="..\Helper_CoordinateTranforms\Helper_CoordinateTranforms.csproj" />
-		<ProjectReference Include="..\Input_GamepadUsage\Input_GamepadUsage.csproj" />
-		<ProjectReference Include="..\Input_MouseAndKeyboardUsage\Input_MouseAndKeyboardUsage.csproj" />
-		<ProjectReference Include="..\Mesh_HelperExamples\Mesh_HelperExamples.csproj" />
-		<ProjectReference Include="..\Mesh_ManualChangingMesh\Mesh_ManualChangingMesh.csproj" />
-		<ProjectReference Include="..\Mesh_ManualMeshSimple\Mesh_ManualMeshSimple.csproj" />
-		<ProjectReference Include="..\Mix_SimpleWholeTextureMixingWithFactors\Mix_SimpleWholeTextureMixingWithFactors.csproj" />
-		<ProjectReference Include="..\Mix_UsingATextureForPerPixelMixing\Mix_UsingATextureForPerPixelMixing.csproj" />
-		<ProjectReference Include="..\SampleBase\SampleBase.csproj" />
-		<ProjectReference Include="..\StyleEffects_CRT\StyleEffects_CRT.csproj" />
-		<ProjectReference Include="..\StyleEffects_EdgeDetection\StyleEffects_EdgeDetection.csproj" />
-		<ProjectReference Include="..\StyleEffects_OldMovie\StyleEffects_OldMovie.csproj" />
-		<ProjectReference Include="..\StyleEffects_Pixellate\StyleEffects_Pixellate.csproj" />
-		<ProjectReference Include="..\StyleEffects_Static\StyleEffects_Static.csproj" />
-		<ProjectReference Include="..\StyleEffects_UsingConfigurationHelpers\StyleEffects_UsingConfigurationHelpers.csproj" />
-		<ProjectReference Include="..\Surfaces_CreateTextureFromDataRGBA\Surfaces_CreateTextureFromDataRGBA.csproj" />
-		<ProjectReference Include="..\Window_ChangingWindowProperties\Window_ChangingWindowProperties.csproj" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 	</ItemGroup>
 
 	<ItemGroup>

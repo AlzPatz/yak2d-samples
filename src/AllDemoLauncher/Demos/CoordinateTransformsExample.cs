@@ -1,5 +1,4 @@
 ﻿using Yak2D;
-using SampleBase;
 using System.Numerics;
 using System;
 using System.Drawing;

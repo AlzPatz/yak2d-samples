@@ -2,47 +2,66 @@
 {
     class Program
     {
+        enum eBackend { Default, D3D, Vulkan, OpenGL, OpenGLES, Metal }
+
         static void Main(string[] args)
         {
-            var demo = new Dictionary<int, (string Name, Action Run)>()
-            {
-                { 0, ("Bloom Example", () => Yak2D.Launcher.Run(new BloomExample())) },
-                { 1, ("Blur Example", () => Yak2D.Launcher.Run(new BlurExample())) },
-                { 2, ("Colour Effects Example", () => Yak2D.Launcher.Run(new ColourEffectsExample())) },
-                { 3, ("Copy Example", () => Yak2D.Launcher.Run(new CopyExample())) },
-                { 4, ("Custom Shader Example", () => Yak2D.Launcher.Run(new CustomShaderExample())) },
-                { 5, ("Custom Veldrid Compute Shader Example", () => Yak2D.Launcher.Run(new CustomVeldridComputeExample())) },
-                { 6, ("Distortion Using Helper Functions", () => Yak2D.Launcher.Run(new DistortionHelperExample())) },
-                { 7, ("Distortion Manual Texture Creation", () => Yak2D.Launcher.Run(new DistortionManualExample())) },
-                { 8, ("Prerendering Textures for Later Use", () => Yak2D.Launcher.Run(new PreRenderExample())) },
-                { 9, ("Draw Basic Polygon Helpers", () => Yak2D.Launcher.Run(new DrawUsingHelperFunctions())) },
-                { 10, ("Draw Camera 2D World and Screen", () => Yak2D.Launcher.Run(new WorldAndScreenDrawing())) },
-                { 11, ("Draw Fluent Interface Helper", () => Yak2D.Launcher.Run(new DrawFluentInterfaceExamples())) },
-                { 12, ("Draw Font Example", () => Yak2D.Launcher.Run(new DrawFontExample())) },
-                { 13, ("Draw Image File Formats", () => Yak2D.Launcher.Run(new ImageFormats())) },
-                { 14, ("Persistent Draw Queue", () => Yak2D.Launcher.Run(new PersistentDrawQueueExample())) },
-                { 15, ("Draw Polygons from Vertices", () => Yak2D.Launcher.Run(new DrawCustomPolygons())) },
-                { 16, ("Split Screen Example", () => Yak2D.Launcher.Run(new SplitScreenExample())) },
-                { 17, ("Framework Items Creation and Destruction", () => Yak2D.Launcher.Run(new CreationAndDestruction())) },
-                { 18, ("GPU to CPU Surface Copy Float32", () => Yak2D.Launcher.Run(new GpuToCpuFloat32Copy())) },
-                { 19, ("GPU to CPU Surface Copy RGBA", () => Yak2D.Launcher.Run(new GpuToCpuRgbaCopy())) },
-                { 20, ("Coordinate Transforms Helper", () => Yak2D.Launcher.Run(new CoordinateTransformsExample())) },
-                { 21, ("Gamepad Input Usage", () => Yak2D.Launcher.Run(new GamepadUsage())) },
-                { 22, ("Mouse and Keyboard Input Usage", () => Yak2D.Launcher.Run(new MouseAndKeyboardUsage())) },
-                { 23, ("Mesh Helper Examples", () => Yak2D.Launcher.Run(new MeshHelperExamples())) },
-                { 24, ("Manual Mesh Modification", () => Yak2D.Launcher.Run(new ManualMesh())) },
-                { 25, ("Simple Manual Mesh", () => Yak2D.Launcher.Run(new ManualMeshSimple())) },
-                { 26, ("Texture Mixing with Factors", () => Yak2D.Launcher.Run(new SimpleMixing())) },
-                { 27, ("Per-Pixel Texture Mixing", () => Yak2D.Launcher.Run(new PerPixelMixing())) },
-                { 28, ("CRT Style Effect", () => Yak2D.Launcher.Run(new CrtEffectsExample())) },
-                { 29, ("Edge Detection Effect", () => Yak2D.Launcher.Run(new EdgeDetectionExample())) },
-                { 30, ("Old Movie Effect", () => Yak2D.Launcher.Run(new OldMovieExample())) },
-                { 31, ("Pixelate Effect", () => Yak2D.Launcher.Run(new PixellateExample())) },
-                { 32, ("Static Noise Effect", () => Yak2D.Launcher.Run(new StaticExample())) },
-                { 33, ("Style Effects with Configuration Helpers", () => Yak2D.Launcher.Run(new ConfigurationHelperExample())) },
-                { 34, ("Create Texture from RGBA Data", () => Yak2D.Launcher.Run(new RgbaTextureFromData())) },
-                { 35, ("Window Properties Changing", () => Yak2D.Launcher.Run(new ChangingWindowProperties())) },
+            var backends = new Dictionary<eBackend, string> {
+                { eBackend.Default, "default" },
+                { eBackend.D3D, "d3d" },
+                { eBackend.Vulkan, "vulkan" },
+                { eBackend.OpenGL, "opengl" },
+                { eBackend.OpenGLES, "opengles" },
+                { eBackend.Metal, "metal" }
             };
+
+            Action<string, dynamic> run = (backend, ex) =>
+            {
+                ex.ChangeBackendStartUpConfig(backend);
+                Yak2D.Launcher.Run(ex);
+            };
+
+            var demo = new Dictionary<int, (string Name, Action<string> Run)>()
+            {
+                { 0, ("Bloom Example", (b) => run(b, new BloomExample())) },
+                { 1, ("Blur Example", (b) => run(b, new BlurExample())) },
+                { 2, ("Colour Effects Example", (b) => run(b, new ColourEffectsExample())) },
+                { 3, ("Copy Example", (b) => run(b, new CopyExample())) },
+                { 4, ("Custom Shader Example", (b) => run(b, new CustomShaderExample())) },
+                { 5, ("Custom Veldrid Compute Shader Example", (b) => run(b, new CustomVeldridComputeExample())) },
+                { 6, ("Distortion Using Helper Functions", (b) => run(b, new DistortionHelperExample())) },
+                { 7, ("Distortion Manual Texture Creation", (b) => run(b, new DistortionManualExample())) },
+                { 8, ("Prerendering Textures for Later Use", (b) => run(b, new PreRenderExample())) },
+                { 9, ("Draw Basic Polygon Helpers", (b) => run(b, new DrawUsingHelperFunctions())) },
+                { 10, ("Draw Camera 2D World and Screen", (b) => run(b, new WorldAndScreenDrawing())) },
+                { 11, ("Draw Fluent Interface Helper", (b) => run(b, new DrawFluentInterfaceExamples())) },
+                { 12, ("Draw Font Example", (b) => run(b, new DrawFontExample())) },
+                { 13, ("Draw Image File Formats", (b) => run(b, new ImageFormats())) },
+                { 14, ("Persistent Draw Queue", (b) => run(b, new PersistentDrawQueueExample())) },
+                { 15, ("Draw Polygons from Vertices", (b) => run(b, new DrawCustomPolygons())) },
+                { 16, ("Split Screen Example", (b) => run(b, new SplitScreenExample())) },
+                { 17, ("Framework Items Creation and Destruction", (b) => run(b, new CreationAndDestruction())) },
+                { 18, ("GPU to CPU Surface Copy Float32", (b) => run(b, new GpuToCpuFloat32Copy())) },
+                { 19, ("GPU to CPU Surface Copy RGBA", (b) => run(b, new GpuToCpuRgbaCopy())) },
+                { 20, ("Coordinate Transforms Helper", (b) => run(b, new CoordinateTransformsExample())) },
+                { 21, ("Gamepad Input Usage", (b) => run(b, new GamepadUsage())) },
+                { 22, ("Mouse and Keyboard Input Usage", (b) => run(b, new MouseAndKeyboardUsage())) },
+                { 23, ("Mesh Helper Examples", (b) => run(b, new MeshHelperExamples())) },
+                { 24, ("Manual Mesh Modification", (b) => run(b, new ManualMesh())) },
+                { 25, ("Simple Manual Mesh", (b) => run(b, new ManualMeshSimple())) },
+                { 26, ("Texture Mixing with Factors", (b) => run(b, new SimpleMixing())) },
+                { 27, ("Per-Pixel Texture Mixing", (b) => run(b, new PerPixelMixing())) },
+                { 28, ("CRT Style Effect", (b) => run(b, new CrtEffectsExample())) },
+                { 29, ("Edge Detection Effect", (b) => run(b, new EdgeDetectionExample())) },
+                { 30, ("Old Movie Effect", (b) => run(b, new OldMovieExample())) },
+                { 31, ("Pixelate Effect", (b) => run(b, new PixellateExample())) },
+                { 32, ("Static Noise Effect", (b) => run(b, new StaticExample())) },
+                { 33, ("Style Effects with Configuration Helpers", (b) => run(b, new ConfigurationHelperExample())) },
+                { 34, ("Create Texture from RGBA Data", (b) => run(b, new RgbaTextureFromData())) },
+                { 35, ("Window Properties Changing", (b) => run(b, new ChangingWindowProperties())) },
+            };
+
+            var backend = eBackend.Default;
 
             var running = true;
             while (running)
@@ -50,6 +69,7 @@
                 //Console.Clear();
                 Console.WriteLine("Yak2D Demo Launcher");
                 Console.WriteLine("-------------------");
+                Console.WriteLine("Selected Backend: " + backend.ToString());
                 Console.WriteLine();
 
                 foreach (var app in demo.OrderBy(a => a.Key))
@@ -58,7 +78,7 @@
                 }
 
                 Console.WriteLine();
-                Console.WriteLine("Enter selection (or 'q' to quit): ");
+                Console.WriteLine("Enter Demo Selection (or 'b' to change backend, or 'q' to quit): ");
 
                 var inputLine = Console.ReadLine();
                 if (int.TryParse(inputLine, out int choice) && demo.ContainsKey(choice))
@@ -66,7 +86,8 @@
                     var selected = demo[choice];
 
                     Console.WriteLine($"You selected: {selected.Name}");
-                    selected.Run();
+                    Console.WriteLine("Tip: Escape will quit application when running...");
+                    selected.Run(backends[backend]);
                 }
                 else
                 {
@@ -77,7 +98,38 @@
                     }
                     else
                     {
-                        Console.WriteLine("Invalid selection.");
+                        if (inputLine == "b")
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Select New Backend:");
+                            Console.WriteLine();
+                            var n = 0;
+                            var backends_array = new eBackend[backends.Count];
+                            foreach (var be in backends.OrderBy(a => a.Key))
+                            {
+                                Console.WriteLine($"[{n}] {be.Value}");
+                                backends_array[n] = be.Key;
+                                n++;
+                            }
+                            Console.WriteLine();
+                            Console.WriteLine("Enter Backend #: ");
+
+                            var anotherInputLine = Console.ReadLine();
+                            if (int.TryParse(anotherInputLine, out int option) && option >= 0 && option < n)
+                            {
+                                backend = backends_array[option];
+                                Console.WriteLine($"You selected: {backends[backend]}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid backend selection.");
+                            }
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid demo or option selection.");
+                        }
                     }
                 }
 

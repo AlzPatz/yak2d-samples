@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using SampleBase;
 using Yak2D;
 
 namespace Demo

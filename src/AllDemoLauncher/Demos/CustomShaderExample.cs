@@ -1,8 +1,8 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using Yak2D;
-using SampleBase;
-using System;
+using Yak2D.Graphics;
 
 namespace Demo
 {

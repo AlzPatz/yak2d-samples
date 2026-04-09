@@ -11,6 +11,32 @@ namespace Demo
 
         public abstract void OnStartup();
 
+        GraphicsApi _startUpBackEnd = GraphicsApi.SystemDefault;
+        public void ChangeBackendStartUpConfig(string backend)
+        {
+            switch (backend)
+            {
+                case "default":
+                    _startUpBackEnd = GraphicsApi.SystemDefault;
+                    break;
+                case "d3d":
+                    _startUpBackEnd = GraphicsApi.Direct3D11;
+                    break;
+                case "opengl":
+                    _startUpBackEnd = GraphicsApi.OpenGL;
+                    break;
+                case "vulkan":
+                    _startUpBackEnd = GraphicsApi.Vulkan;
+                    break;
+                case "metal":
+                    _startUpBackEnd = GraphicsApi.Metal;
+                    break;
+                case "opengles":
+                    _startUpBackEnd = GraphicsApi.OpenGLES;
+                    break;
+            }
+        }
+
         public virtual StartupConfig Configure()
         {
             //Using Helper Method (equivalent to the settings below)
@@ -18,7 +44,7 @@ namespace Demo
             
             return new StartupConfig
             {
-                PreferredGraphicsApi = GraphicsApi.SystemDefault,
+                PreferredGraphicsApi = _startUpBackEnd,
                 AvoidVulkanWherePossible = true,
                 WindowState = DisplayState.Normal,
                 WindowIsResizable = false,

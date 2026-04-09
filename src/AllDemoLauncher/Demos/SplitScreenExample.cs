@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
-using SampleBase;
 using Yak2D;
 
 namespace Demo

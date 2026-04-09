@@ -1,5 +1,4 @@
-﻿using SampleBase;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Yak2D;
