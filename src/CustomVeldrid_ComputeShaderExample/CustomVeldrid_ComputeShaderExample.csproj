@@ -6,10 +6,10 @@
 </PropertyGroup>
 <!-- Conditionally link to local Veldrid spirv source if it is present within the same directory -->
 <ItemGroup Condition="!Exists('..\..\..\veldrid-spirv\')">
-	<PackageReference Include="NeoVeldrid" Version="1.0.0-rc.1" />
-	<PackageReference Include="NeoVeldrid.Sdl2" Version="1.0.0-rc.1" />
-	<PackageReference Include="NeoVeldrid.SPIRV" Version="1.0.0-rc.1" />
-	<PackageReference Include="NeoVeldrid.Utilities" Version="1.0.0-rc.1" />
+	<PackageReference Include="NeoVeldrid" Version="1.0.0" />
+	<PackageReference Include="NeoVeldrid.Sdl2" Version="1.0.0" />
+	<PackageReference Include="NeoVeldrid.SPIRV" Version="1.0.0" />
+	<PackageReference Include="NeoVeldrid.Utilities" Version="1.0.0" />
 </ItemGroup>
 <!-- If veldrid source not present, use nuget -->
 <ItemGroup Condition="Exists('..\..\..\veldrid-spirv\')">
