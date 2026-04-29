@@ -45,7 +45,7 @@ namespace Demo
             return new StartupConfig
             {
                 PreferredGraphicsApi = _startUpBackEnd,
-                AvoidVulkanWherePossible = true,
+                AvoidVulkanWherePossible = false,
                 WindowState = DisplayState.Normal,
                 WindowIsResizable = false,
                 WindowPositionX = 100,

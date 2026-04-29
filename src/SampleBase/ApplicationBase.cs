@@ -20,7 +20,7 @@ namespace SampleBase
             return new StartupConfig
             {
                 PreferredGraphicsApi = GraphicsApi.SystemDefault,
-                AvoidVulkanWherePossible = true,
+                AvoidVulkanWherePossible = false,
                 WindowState = DisplayState.Normal,
                 WindowIsResizable = false,
                 WindowPositionX = 100,
