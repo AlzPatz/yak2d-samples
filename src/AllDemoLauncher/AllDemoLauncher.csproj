@@ -30,4 +30,26 @@
 		<EmbeddedResource Include="Shaders\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Fonts\snappy_38.fnt" />
+	  <None Remove="Fonts\snappy_38_0.png" />
+	  <None Remove="Fonts\snappy_38_1.png" />
+	  <None Remove="Fonts\snappy_64.fnt" />
+	  <None Remove="Fonts\snappy_64_0.png" />
+	  <None Remove="Fonts\snappy_64_1.png" />
+	  <None Remove="Fonts\snappy_64_2.png" />
+	  <None Remove="Fonts\snappy_64_3.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Fonts\snappy_38.fnt" />
+	  <EmbeddedResource Include="Fonts\snappy_38_0.png" />
+	  <EmbeddedResource Include="Fonts\snappy_38_1.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64.fnt" />
+	  <EmbeddedResource Include="Fonts\snappy_64_0.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_1.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_2.png" />
+	  <EmbeddedResource Include="Fonts\snappy_64_3.png" />
+	</ItemGroup>
+
 </Project>
