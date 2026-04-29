@@ -27,31 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Fonts\snappy_38.fnt" />
-	  <EmbeddedResource Include="Fonts\snappy_38_0.png" />
-	  <EmbeddedResource Include="Fonts\snappy_38_1.png" />
-	  <EmbeddedResource Include="Fonts\snappy_64.fnt" />
-	  <EmbeddedResource Include="Fonts\snappy_64_0.png" />
-	  <EmbeddedResource Include="Fonts\snappy_64_1.png" />
-	  <EmbeddedResource Include="Fonts\snappy_64_2.png" />
-	  <EmbeddedResource Include="Fonts\snappy_64_3.png" />
-	  <EmbeddedResource Include="Shaders\conway.glsl" />
-	  <EmbeddedResource Include="Shaders\CustomBinaryFragment.glsl" />
-	  <EmbeddedResource Include="Shaders\Direct3D\compile.bat" />
-	  <EmbeddedResource Include="Shaders\Direct3D\CustomBinaryFragment.hlsl" />
-	  <EmbeddedResource Include="Shaders\Direct3D\CustomBinaryFragment.hlsl.bytes" />
-	  <EmbeddedResource Include="Shaders\fragment.glsl" />
-	  <EmbeddedResource Include="Shaders\Metal\compile.sh" />
-	  <EmbeddedResource Include="Shaders\Metal\CustomBinaryFragment.metal" />
-	  <EmbeddedResource Include="Shaders\Metal\CustomBinaryFragment.metallib" />
-	  <EmbeddedResource Include="Shaders\OpenGL\CustomBinaryFragment.glsl" />
-	  <EmbeddedResource Include="Shaders\OpenGL\CustomCopyFragment.glsl" />
-	  <EmbeddedResource Include="Shaders\vertex.glsl" />
-	  <EmbeddedResource Include="Shaders\Vulkan\compile.bat" />
-	  <EmbeddedResource Include="Shaders\Vulkan\compile.sh" />
-	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.frag" />
-	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.glsl" />
-	  <EmbeddedResource Include="Shaders\Vulkan\CustomBinaryFragment.spv" />
+		<EmbeddedResource Include="Shaders\**" />
 	</ItemGroup>
 
 </Project>

@@ -17,8 +17,4 @@
     <EmbeddedResource Include="Shaders\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Shaders\CustomBinaryFragment.glsl" />
-  </ItemGroup>
-
 </Project>
