@@ -153,7 +153,10 @@ namespace Window_ChangingWindowProperties
         {
             if (_isViewportStale)
             {
+                //Replace the old viewport, rather than creating a new one every frame
+                yak.Stages.DestroyViewport(_viewport);
                 CreateViewport(yak);
+                _isViewportStale = false;
             }
         }
 

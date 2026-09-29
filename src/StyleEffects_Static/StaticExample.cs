@@ -19,7 +19,7 @@ namespace StyleEffects_Static
         private IViewport _viewport0;
         private IViewport _viewport1;
 
-        public override string ReturnWindowTitle() => "Style Effect: Edge Detection";
+        public override string ReturnWindowTitle() => "Style Effect: Static";
 
         public override void OnStartup() { }
 
