@@ -6,13 +6,27 @@ yak2D is a small framework that helps quickly generate cross platform (desktop) 
 
 It offers easy to use 2d polgon and 'sprite' drawing functions, in addition to flexible render path creation and shader effects.
 
-yak2D is built upon the Veldrid cross-platform API agnostic rendering library for .NET, along with the SDL2 via the [Veldrid](https://github.com/mellinoe/veldrid) Library.
+yak2D is a .NET 10 library built upon [NeoVeldrid](https://www.nuget.org/packages/NeoVeldrid) (a maintained fork of the [Veldrid](https://github.com/mellinoe/veldrid) cross-platform, graphics API agnostic rendering library), with windowing and input via SDL2.
 
 ![](images/logo.png) 
 
 ## Documentation
 
 See [yak2D documentation](https://alzpatz.github.io/yak2d-docs/) for information on yak2D's structure and usage.
+
+## Running the Samples
+
+Requires the [.NET 10 SDK](https://dotnet.microsoft.com/download) on Windows, Linux or macOS. Nothing else needs installing.
+
+```shell
+git clone https://github.com/AlzPatz/yak2d-samples.git
+cd yak2d-samples/src
+dotnet run --project Bloom_Example
+```
+
+Replace `Bloom_Example` with any sample project folder name, or run `AllDemoLauncher` to browse all of them from one application.
+
+The samples use the [Yak2D NuGet package](https://www.nuget.org/packages/Yak2D/). If the [yak2d](https://github.com/AlzPatz/yak2d) source repository is checked out alongside this one (i.e. `../yak2d` relative to this repository's root), the samples instead build against that local source.
 
 ## Example Screenshots
 
