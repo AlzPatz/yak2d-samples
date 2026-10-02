@@ -44,9 +44,9 @@ namespace StyleEffects_UsingConfigurationHelpers
             _crt = yak.Stages.CreateStyleEffectsStage();
 
             yak.Stages.SetStyleEffectsPixellateConfig(_pixellate, PixellateConfiguration.PreSet(0.0f));
-            yak.Stages.SetStyleEffectsEdgeDetectionConfig(_pixellate, EdgeDetectionConfiguration.PreSet(0.0f));
-            yak.Stages.SetStyleEffectsOldMovieConfig(_pixellate, OldMovieConfiguration.PreSet(0.0f));
-            yak.Stages.SetStyleEffectsCrtConfig(_pixellate, CrtEffectConfiguration.PreSet(0.0f, 960.0f / 540.0f));
+            yak.Stages.SetStyleEffectsEdgeDetectionConfig(_edgeDetection, EdgeDetectionConfiguration.PreSet(0.0f));
+            yak.Stages.SetStyleEffectsOldMovieConfig(_oldmovie, OldMovieConfiguration.PreSet(0.0f));
+            yak.Stages.SetStyleEffectsCrtConfig(_crt, CrtEffectConfiguration.PreSet(0.0f, 960.0f / 540.0f));
 
             return true;
         }
