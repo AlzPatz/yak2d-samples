@@ -18,7 +18,7 @@ namespace Demo
         private ICamera2D _camera;
         private Vector2 _mousePosition;
 
-        public override string ReturnWindowTitle() => "Mixing Example - Simple Whole Texture Mixing Factors";
+        public override string ReturnWindowTitle() => "Mixing Example - Using a Texture for Per-Pixel Mixing";
 
         public override void OnStartup() { }
 
