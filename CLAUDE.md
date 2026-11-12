@@ -36,10 +36,10 @@ There are no tests: building the solution is the check.
 
 - When the yak2d repo is checked out beside this one (`../../../yak2d/`), they reference its
   source (`ProjectReference`), so the samples always build against the latest yak2d code.
-- Otherwise, or with `-p:UsePackages=true`, they use the `Yak2D` NuGet package (`1.2.*`).
+- Otherwise, or with `-p:UsePackages=true`, they use the `Yak2D` NuGet package (`1.3.*`).
 
 So an isolated clone (CI, or a smith run, which has no sibling folders and no network) builds
-against the published package. When yak2d's minor version moves on (e.g. to 1.3), update `1.2.*`
+against the published package. When yak2d's minor version moves on (e.g. to 1.4), update `1.3.*`
 in both project files. The solution lists only this repo's projects, never yak2d's; keep it that
 way, or the repo stops building on its own.
 
